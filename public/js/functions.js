@@ -1,7 +1,7 @@
 const button = document.querySelector('#getDates');
 const results = document.querySelector('#results')
 let year = document.querySelector('#year-select');
-// year.value = "2017";
+const processingDays = document.querySelector('#processingDays')
 
 const getBankHols = () => {
     fetch(`https://www.gov.uk/bank-holidays.json`)
@@ -22,6 +22,7 @@ const getBankHols = () => {
 }
 
 const convertDateToUK = (date) => {
+    console.log(date);
     date = `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(0, 4)}`;
     return date;
 }
@@ -68,6 +69,47 @@ const displayWeekends = (weekends) => {
     }
 }
 
+const displayProcessingDays = () => {
+    const header = document.createElement('h2');
+    header.innerText = "Processing days calendar:";
+    // Displaytable
+    const table = document.createElement('table');
+    for (let i = 0; i < 26; i++) {
+        const tr = table.insertRow();
+        for (let j = 0; j < 8; j++) {
+            const td = tr.insertCell();
+        }
+    }
+    // Populate table values
+    table.rows[0].cells[0].innerText = "Claim Date";
+    table.rows[0].cells[1].innerText = "DD Dedupe Report";
+    table.rows[0].cells[2].innerText = "Claim run @ 9.00am (completed by Apps Support Team)";
+    table.rows[0].cells[3].innerText = "Date to send claim file (completed by Supporter Payments)";
+    table.rows[0].cells[4].innerText = "Bank Processing Date";
+    table.rows[0].cells[5].innerText = "Payment Date";
+    table.rows[0].cells[6].innerText = "ARUDD Reporting (completed by Operations Team)";
+    table.rows[0].cells[7].innerText = "ARUDD Reporting sweep-up (completed by Operations Team)";
+    table.rows[1].cells[0].innerText = "Step 1 - Capture the 5th or 19th of the month";
+    table.rows[1].cells[1].innerText = "Step 8 - 3 working days before claim run";
+    table.rows[1].cells[2].innerText = "Step 7 - 1 working day before the claim file is sent";
+    table.rows[1].cells[3].innerText = "Step 4 - 1 working day before the procesing date";
+    table.rows[1].cells[4].innerText = "Step 3 - 1 working day before the payment date";
+    table.rows[1].cells[5].innerText = "Step 2 - 5th or 19th of the month but must be a working day, if falls on weekend of bank holiday, the payment date will be next working day following the 5th or 19th.";
+    table.rows[1].cells[6].innerText = "Step 5 - 1 working day after the payment date";
+    table.rows[1].cells[7].innerText = "Step 6 - 2 working days after the payment date";
+    // Column A dates
+    let month = 1;
+    for (let i = 2; i < table.rows.length; i++) {
+        if (i % 2 === 0) {
+            table.rows[i].cells[0].innerText = `05/${month}/${year}`;
+        } else if (i % 2 === 1) {
+            table.rows[i].cells[0].innerText = `19/${month}/${year}`;
+            month++;
+        }
+    }
+    processingDays.append(header, table);
+}
+
 
 
 year.addEventListener('change', function() {
@@ -77,5 +119,6 @@ year.addEventListener('change', function() {
 button.addEventListener('submit', function(e) {
     e.preventDefault();
     getBankHols();
+    displayProcessingDays();
 })
 
