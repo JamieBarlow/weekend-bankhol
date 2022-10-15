@@ -1,9 +1,9 @@
 const button = document.querySelector('#getDates');
 const results = document.querySelector('#results')
 let year = document.querySelector('#year-select');
-year.value = 2017;
+// year.value = "2017";
 
-const getDates = () => {
+const getBankHols = () => {
     fetch(`https://www.gov.uk/bank-holidays.json`)
     .then(res => {
         if (res.ok) {
@@ -16,22 +16,44 @@ const getDates = () => {
         const result = (data['england-and-wales'].events);
         const dates = result.map(a => a.date);
         const thisYear = dates.filter(date => date.slice(0, 4) === year);
-        displayDates(thisYear);
+        displayBankHols(thisYear);
+        displayWeekends(thisYear);
     })
-    
 }
 
-const displayDates = (dates) => {
+const convertDateToUK = (date) => {
+    date = `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(0, 4)}`;
+    return date;
+}
+
+const displayBankHols = (thisYear) => {
     const header = document.createElement('h2');
-    header.innerText = "Bank holiday dates:";
+    header.innerText = `Bank holiday dates for ${year}`;
     const list = document.createElement('ul');
     results.append(header, list);
-    for (date of dates) {
+    for (date of thisYear) {
         const listItem = document.createElement('li');
-        listItem.innerText = date;
+        listItem.innerText = convertDateToUK(date);
         list.append(listItem);
     }
-    console.log(dates);
+}
+
+const displayWeekends = (thisYear) => {
+    let endOfYear = new Date(`December 31, ${year}`);
+    let daysOfYear = [];
+    // get all days of year
+    for (let i= new Date(`January 1, ${year}`); i <= endOfYear; i.setDate(i.getDate() + 1)) {
+        daysOfYear.push(new Date(i));
+    }
+    // get weekends only by removing week days
+    let weekends = [];
+    for (day of daysOfYear) {
+        if (day.getDay() === 6 || day.getDay() === 0) {
+            weekends.push(day.toLocaleDateString('en-GB'));
+        }
+    }
+    console.log(weekends);
+    // console.log(daysOfYear);
 }
 
 year.addEventListener('change', function() {
@@ -40,6 +62,6 @@ year.addEventListener('change', function() {
 
 button.addEventListener('submit', function(e) {
     e.preventDefault();
-    getDates();
+    getBankHols();
 })
 
