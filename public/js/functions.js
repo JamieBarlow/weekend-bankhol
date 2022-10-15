@@ -17,7 +17,7 @@ const getBankHols = () => {
         const dates = result.map(a => a.date);
         const thisYear = dates.filter(date => date.slice(0, 4) === year);
         displayBankHols(thisYear);
-        displayWeekends(thisYear);
+        getWeekends(year);
     })
 }
 
@@ -38,7 +38,7 @@ const displayBankHols = (thisYear) => {
     }
 }
 
-const displayWeekends = (thisYear) => {
+const getWeekends = (year) => {
     let endOfYear = new Date(`December 31, ${year}`);
     let daysOfYear = [];
     // get all days of year
@@ -52,9 +52,23 @@ const displayWeekends = (thisYear) => {
             weekends.push(day.toLocaleDateString('en-GB'));
         }
     }
-    console.log(weekends);
-    // console.log(daysOfYear);
+    displayWeekends(weekends);
 }
+
+const displayWeekends = (weekends) => {
+    console.log(weekends);
+    const header = document.createElement('h2');
+    header.innerText = `Weekend dates for ${year}`;
+    const list = document.createElement('ul');
+    results.append(header, list);
+    for (date of weekends) {
+        const listItem = document.createElement('li');
+        listItem.innerText = date;
+        list.append(listItem);
+    }
+}
+
+
 
 year.addEventListener('change', function() {
     year = year.value;
