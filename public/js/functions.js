@@ -38,10 +38,19 @@ const displayBankHols = (thisYear) => {
     for (date of thisYear) {
         const listItem = document.createElement('li');
         let ukDate = convertDateToUK(date);
-        nonProcessingDays.push(ukDate);
+        // nonProcessingDays.push(ukDate);
+        // console.log(`Bank hol date: ${date}`);
+        nonProcessingDays.push(convertDateToObject(date));
+        // console.log(nonProcessingDays);
         listItem.innerText = ukDate;
         list.append(listItem);
     }
+}
+
+const convertDateToObject = (date) => {
+    const dateObject = new Date(date);
+    // console.log(`date object: ${dateObject}`)
+    return dateObject;
 }
 
 const getWeekends = (year) => {
@@ -56,9 +65,10 @@ const getWeekends = (year) => {
     for (day of daysOfYear) {
         if (day.getDay() === 6 || day.getDay() === 0) {
             weekends.push(day.toLocaleDateString('en-GB'));
-            nonProcessingDays.push(day.toLocaleDateString('en-GB'));
+            nonProcessingDays.push(day);
         }
     }
+    console.log(nonProcessingDays);
     displayWeekends(weekends);
 }
 
