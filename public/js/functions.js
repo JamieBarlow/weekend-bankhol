@@ -152,50 +152,76 @@ const displayProcessingDays = () => {
         }
     }
     // Column F dates
-    function compareDates(dates1, dates2, column) {
-        let paymentDates = [];
+    function compareDates(dates1, dates2, direction, column) {
+        let resultDates = [];
         let defaultDate = true;
         for (let i = 0; i < dates1.length; i++) {
             for (let j = 0; j < dates2.length; j++) {
                 if (dates1[i].getTime() === dates2[j].getTime()) {
+                    defaultDate = false;
                     let newDate = new Date(`${dates1[i]}`);
-                    newDate.setDate(newDate.getDate() + 1);
+                    newDate.setDate(`${direction(newDate.getDate())}`);
                     for (let k = 0; k < dates2.length; k++) {
-                        if (newDate.getTime() === dates2[k].getTime()) {
-                            newDate.setDate(newDate.getDate() + 1);
+                        if (newDate.getTime() === dates2[j].getTime()) {
+                            defaultDate = false;
+                            newDate.setDate(`${direction(newDate.getDate())}`);
                         }
-                    }
-                    for (let l = 0; l < dates2.length; l++) {
-                        if (newDate.getTime() === dates2[l].getTime()) {
-                            newDate.setDate(newDate.getDate() + 1);
+                        for (let l = 0; l < dates2.length; l++) {
+                            if (newDate.getTime() === dates2[l].getTime()) {
+                                defaultDate = false;
+                                newDate.setDate(`${direction(newDate.getDate())}`)
+                            }
                         }
                     }
                     table.rows[i + 2].cells[column].innerText = newDate;
-                    paymentDates.push(newDate);
-                    defaultDate = false;
-                }   
-            }
+                    resultDates.push(newDate); 
+                }
+            } 
             if (defaultDate === true) {
                 table.rows[i + 2].cells[column].innerText = dates1[i];
-                paymentDates.push(dates1[i]);
+                resultDates.push(dates1[i]);
             }
             defaultDate = true;
         }
-        return paymentDates;
+        return resultDates;
     }
-    compareDates(claimDates, nonProcessingDays, 5);
-    let paymentDates = compareDates(claimDates, nonProcessingDays, 4);
+
+    // Pass the below functions as the 'direction' argument to count days either forwards or backwards;
+    const forwards = a => a++;
+    const backwards = a => a--;
+
+    compareDates(claimDates, nonProcessingDays, forwards, 5);
+    let paymentDates = compareDates(claimDates, nonProcessingDays, forwards, 5);
     // console.log(paymentDates);
 
     // Column E dates
     function columnEdates(dates) {
+        let colEdates = [];
+        // Shift dates back by 1
         for (let i = 0; i < dates.length; i++) {
             let newDate = new Date(dates[i]);
             newDate.setDate(newDate.getDate() - 1);
-            table.rows[i + 2].cells[4].innerText = newDate;
+            colEdates.push(newDate);
         }
+        // Feed dates into compareDates function (backwards), and put into 4th column
+        compareDates(colEdates, nonProcessingDays, backwards, 4)
+        return colEdates;
     }
     columnEdates(paymentDates);
+    let bankProcessingDates = columnEdates(paymentDates);
+
+    // Column D dates
+    function columnDdates(dates) {
+        let colDdates = [];
+        for (let i = 0; i < dates.length; i++) {
+            let newDate = new Date(dates[i]);
+            newDate.setDate(newDate.getDate() - 1);
+            colDdates.push(newDate);
+        }
+        compareDates(colDdates, nonProcessingDays, backwards, 3);
+    }
+    columnDdates(bankProcessingDates);
+    let colDdates = columnDdates(bankProcessingDates);
 
     console.log(`Claim dates: ${claimDates}`);
     console.log(`Non processing days: ${nonProcessingDays}`);
