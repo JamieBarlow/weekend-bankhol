@@ -104,9 +104,26 @@ const displayWeekends = (weekends) => {
         list.append(listItem);
     }
     // console.log(`Display weekends: ${nonProcessingDays[3]}`)
+    displayCRUKHols();
     displayProcessingDays();
 }
 
+const displayCRUKHols = () => {
+    let CRUKHols = [];
+    CRUKHols.push(new Date('December 23, 2022'), new Date('December 26, 2022'), new Date('December 27, 2022'));
+    const header = document.createElement('h2');
+    header.innerText = `CRUK holiday dates for (${year})`;
+    const list = document.createElement('ul');
+    results.append(header, list);
+    for (let date of CRUKHols) {
+        const listItem = document.createElement('li');
+        listItem.innerText = date;
+        list.append(listItem);
+        nonProcessingDays.push(date);
+    }
+}
+
+// Column A
 const displayProcessingDays = () => {
     const header = document.createElement('h2');
     header.innerText = "Processing days calendar:";
@@ -232,7 +249,12 @@ const displayProcessingDays = () => {
     colC = compareDates(colC, nonProcessingDays, backwards, 2);
 
     // Column B dates
-
+    let colB = shiftDatesBack(colC);
+    colB = compareDates(colB, nonProcessingDays, backwards, 1);
+    colB = shiftDatesBack(colB);   // Shifting back a 2nd day
+    colB = compareDates(colB, nonProcessingDays, backwards, 1);
+    colB = shiftDatesBack(colB);   // Shifting back a 3rd day
+    colB = compareDates(colB, nonProcessingDays, backwards, 1);
 /*
     // Column D dates
     function columnDdates(dates) {
