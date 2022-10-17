@@ -155,21 +155,24 @@ const displayProcessingDays = () => {
     function compareDates(dates1, dates2, direction, column) {
         let resultDates = [];
         let defaultDate = true;
+        console.log(`Dates1 time: ${dates1}`)
+        console.log(`Dates2 time: ${dates2}`)
         for (let i = 0; i < dates1.length; i++) {
             for (let j = 0; j < dates2.length; j++) {
                 if (dates1[i].getTime() === dates2[j].getTime()) {
                     defaultDate = false;
                     let newDate = new Date(`${dates1[i]}`);
                     newDate.setDate(`${direction(newDate.getDate())}`);
+                    console.log(`Date at first stage: ${newDate}`);
                     for (let k = 0; k < dates2.length; k++) {
-                        if (newDate.getTime() === dates2[j].getTime()) {
-                            defaultDate = false;
+                        if (newDate.getTime() === dates2[k].getTime()) {
                             newDate.setDate(`${direction(newDate.getDate())}`);
-                        }
-                        for (let l = 0; l < dates2.length; l++) {
-                            if (newDate.getTime() === dates2[l].getTime()) {
-                                defaultDate = false;
-                                newDate.setDate(`${direction(newDate.getDate())}`)
+                            console.log(`Date at second stage: ${newDate}`);
+                            for (let l = 0; l < dates2.length; l++) {
+                                if (newDate.getTime() === dates2[l].getTime()) {
+                                    newDate.setDate(`${direction(newDate.getDate())}`)
+                                    console.log(`Date at third stage: ${newDate}`);
+                                }
                             }
                         }
                     }
@@ -187,8 +190,14 @@ const displayProcessingDays = () => {
     }
 
     // Pass the below functions as the 'direction' argument to count days either forwards or backwards;
-    const forwards = a => a++;
-    const backwards = a => a--;
+    function forwards(a) {
+        a++;
+        return a;
+    } 
+    function backwards(a) {
+        a--;
+        return a;
+    }
 
     compareDates(claimDates, nonProcessingDays, forwards, 5);
     let paymentDates = compareDates(claimDates, nonProcessingDays, forwards, 5);
