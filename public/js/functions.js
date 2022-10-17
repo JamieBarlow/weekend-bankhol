@@ -42,21 +42,33 @@ const displayBankHols = (thisYear) => {
     // console.log(`Display bank hols: ${nonProcessingDays[3]}`)
 }
 
+// Converts dates returned from Gov API (format YYYY-MM-DD) to UK display format (DD/MM/YYYY)
 const convertDateToUK = (date) => {
     // console.log(date);
     date = `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(0, 4)}`;
     return date;
 }
 
+// Converts dates from Gov API (format YYYY-MM-DD) to a JavaScript Date Object
 const convertUSDateToObject = (date) => {
     let dateObject = new Date(date);
     // console.log(`date object: ${dateObject}`)
     return dateObject;
 }
 
+// Converts UK format dates (format DD/MM/YYY) to a JavaScript Date Object
 const convertUKDateToObject = (date) => {
     let dateObject = new Date(`${date.slice(3, 5)}/${date.slice(0, 2)}/${date.slice(6, 10)}`);
     return dateObject;
+}
+
+// Converts JavaScript Date Object to UK display format (DD/MM/YYYY)
+const convertJSDateToUK = (date) => {
+    let day = date.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2});
+    let month = (date.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2});
+    let year = date.getFullYear();
+    let ukDate = `${day}/${month}/${year}`
+    return ukDate;
 }
 
 const getWeekends = (year) => {
@@ -140,25 +152,56 @@ const displayProcessingDays = () => {
         }
     }
     // Column F dates
-    for (let i = 0; i < claimDates.length; i++) {
-        for (let j = 0; j < nonProcessingDays.length; j++) {
-            if (claimDates[i].getTime() === nonProcessingDays[j].getTime()) {
-                // console.log(`Match!`)
-                let newDate = new Date(`${claimDates[i]}`);
-                newDate.setDate(newDate.getDate() + 1);
-                for (let k = 0; k < nonProcessingDays.length; k++) {
-                    if (newDate.getTime() === nonProcessingDays[k].getTime()) {
-                        newDate.setDate(newDate.getDate() + 1);
+    function compareDates(dates1, dates2, column) {
+        let paymentDates = [];
+        let defaultDate = true;
+        for (let i = 0; i < dates1.length; i++) {
+            for (let j = 0; j < dates2.length; j++) {
+                if (dates1[i].getTime() === dates2[j].getTime()) {
+                    let newDate = new Date(`${dates1[i]}`);
+                    newDate.setDate(newDate.getDate() + 1);
+                    for (let k = 0; k < dates2.length; k++) {
+                        if (newDate.getTime() === dates2[k].getTime()) {
+                            newDate.setDate(newDate.getDate() + 1);
+                        }
                     }
-                }
-                table.rows[i + 2].cells[5].innerText = newDate;
+                    for (let l = 0; l < dates2.length; l++) {
+                        if (newDate.getTime() === dates2[l].getTime()) {
+                            newDate.setDate(newDate.getDate() + 1);
+                        }
+                    }
+                    table.rows[i + 2].cells[column].innerText = newDate;
+                    paymentDates.push(newDate);
+                    defaultDate = false;
+                }   
             }
+            if (defaultDate === true) {
+                table.rows[i + 2].cells[column].innerText = dates1[i];
+                paymentDates.push(dates1[i]);
+            }
+            defaultDate = true;
+        }
+        return paymentDates;
+    }
+    compareDates(claimDates, nonProcessingDays, 5);
+    let paymentDates = compareDates(claimDates, nonProcessingDays, 4);
+    // console.log(paymentDates);
+
+    // Column E dates
+    function columnEdates(dates) {
+        for (let i = 0; i < dates.length; i++) {
+            let newDate = new Date(dates[i]);
+            newDate.setDate(newDate.getDate() - 1);
+            table.rows[i + 2].cells[4].innerText = newDate;
         }
     }
+    columnEdates(paymentDates);
+
     console.log(`Claim dates: ${claimDates}`);
     console.log(`Non processing days: ${nonProcessingDays}`);
     console.log(`Display processing days: ${nonProcessingDays[3]}`)
     processingDays.append(header, table);
+
 }
 
 
@@ -170,5 +213,4 @@ year.addEventListener('change', function() {
 button.addEventListener('submit', function(e) {
     e.preventDefault();
     getBankHols();
-})
-
+});
