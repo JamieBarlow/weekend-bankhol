@@ -118,7 +118,7 @@ const displayProcessingDays = () => {
             const td = tr.insertCell();
         }
     }
-    // Populate table values
+    // Populate table top 2 rows
     table.rows[0].cells[0].innerText = "Claim Date";
     table.rows[0].cells[1].innerText = "DD Dedupe Report";
     table.rows[0].cells[2].innerText = "Claim run @ 9.00am (completed by Apps Support Team)";
@@ -151,35 +151,34 @@ const displayProcessingDays = () => {
             month++;
         }
     }
+    
     // Column F dates
     function compareDates(dates1, dates2, direction, column) {
         let resultDates = [];
         let defaultDate = true;
-        console.log(`Dates1 time: ${dates1}`)
-        console.log(`Dates2 time: ${dates2}`)
         for (let i = 0; i < dates1.length; i++) {
+            let newDate = new Date(`${dates1[i]}`);
             for (let j = 0; j < dates2.length; j++) {
-                if (dates1[i].getTime() === dates2[j].getTime()) {
+                if (newDate.getTime() === dates2[j].getTime()) {
                     defaultDate = false;
-                    let newDate = new Date(`${dates1[i]}`);
                     newDate.setDate(`${direction(newDate.getDate())}`);
-                    console.log(`Date at first stage: ${newDate}`);
+                    // console.log(`Date at first stage: ${newDate}`);
                     for (let k = 0; k < dates2.length; k++) {
                         if (newDate.getTime() === dates2[k].getTime()) {
                             newDate.setDate(`${direction(newDate.getDate())}`);
-                            console.log(`Date at second stage: ${newDate}`);
+                            // console.log(`Date at second stage: ${newDate}`);
                             for (let l = 0; l < dates2.length; l++) {
                                 if (newDate.getTime() === dates2[l].getTime()) {
                                     newDate.setDate(`${direction(newDate.getDate())}`)
-                                    console.log(`Date at third stage: ${newDate}`);
+                                    // console.log(`Date at third stage: ${newDate}`);
                                 }
                             }
                         }
                     }
                     table.rows[i + 2].cells[column].innerText = newDate;
-                    resultDates.push(newDate); 
+                    resultDates.push(newDate);
                 }
-            } 
+            }
             if (defaultDate === true) {
                 table.rows[i + 2].cells[column].innerText = dates1[i];
                 resultDates.push(dates1[i]);
@@ -201,24 +200,40 @@ const displayProcessingDays = () => {
 
     compareDates(claimDates, nonProcessingDays, forwards, 5);
     let paymentDates = compareDates(claimDates, nonProcessingDays, forwards, 5);
+
     // console.log(paymentDates);
 
-    // Column E dates
-    function columnEdates(dates) {
-        let colEdates = [];
+
+    // Shift dates back by 1 day (use this before comparing with non-processing days)
+    function shiftDatesBack(dates) {
+        let newDates = [];
         // Shift dates back by 1
         for (let i = 0; i < dates.length; i++) {
             let newDate = new Date(dates[i]);
             newDate.setDate(newDate.getDate() - 1);
-            colEdates.push(newDate);
+            newDates.push(newDate);
         }
-        // Feed dates into compareDates function (backwards), and put into 4th column
-        compareDates(colEdates, nonProcessingDays, backwards, 4)
-        return colEdates;
+        return newDates;
     }
-    columnEdates(paymentDates);
-    let bankProcessingDates = columnEdates(paymentDates);
 
+    // Column E dates
+    let colE = shiftDatesBack(paymentDates);
+    compareDates(colE, nonProcessingDays, backwards, 4);
+    colE = compareDates(colE, nonProcessingDays, backwards, 4);
+    
+    // Column D dates
+    let colD = shiftDatesBack(colE);
+    compareDates(colD, nonProcessingDays, backwards, 3);
+    colD = compareDates(colD, nonProcessingDays, backwards, 3);
+
+    // Column C dates
+    let colC = shiftDatesBack(colD);
+    compareDates(colC, nonProcessingDays, backwards, 2);
+    colC = compareDates(colC, nonProcessingDays, backwards, 2);
+
+    // Column B dates
+
+/*
     // Column D dates
     function columnDdates(dates) {
         let colDdates = [];
@@ -232,9 +247,11 @@ const displayProcessingDays = () => {
     columnDdates(bankProcessingDates);
     let colDdates = columnDdates(bankProcessingDates);
 
-    console.log(`Claim dates: ${claimDates}`);
-    console.log(`Non processing days: ${nonProcessingDays}`);
-    console.log(`Display processing days: ${nonProcessingDays[3]}`)
+    */
+
+    // console.log(`Claim dates: ${claimDates}`);
+    // console.log(`Non processing days: ${nonProcessingDays}`);
+    // console.log(`Display processing days: ${nonProcessingDays[3]}`)
     processingDays.append(header, table);
 
 }
