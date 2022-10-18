@@ -18,7 +18,10 @@ function getBankHols() {
             const dates = result.map(a => {
                 return a.date;
             });
-            const thisYear = dates.filter(date => date.slice(0, 4) === year);
+            let thisYear = dates.filter(date => date.slice(0, 4) === year);
+            let lastYear = dates.filter(date => date.slice(0, 4) === ((year - 1).toString()));
+            lastYear = lastYear.filter(item => item.slice(5, 7) === '12');
+            thisYear.push(...lastYear);
             displayBankHols(thisYear);
             getWeekends(year);
         });
@@ -26,7 +29,7 @@ function getBankHols() {
 
 const displayBankHols = (thisYear) => {
     const header = document.createElement('h2');
-    header.innerText = `Bank holiday dates for ${year}`;
+    header.innerText = `Bank holiday dates for ${year} (and late ${year - 1})`;
     const list = document.createElement('ul');
     results.append(header, list);
     for (let date of thisYear) {
@@ -39,7 +42,7 @@ const displayBankHols = (thisYear) => {
         listItem.innerText = ukDate;
         list.append(listItem);
     }
-    // console.log(`Display bank hols: ${nonProcessingDays[3]}`)
+    console.log(`Display bank hols: ${nonProcessingDays[2]}`)
 }
 
 // Converts dates returned from Gov API (format YYYY-MM-DD) to UK display format (DD/MM/YYYY)
@@ -52,6 +55,7 @@ const convertDateToUK = (date) => {
 // Converts dates from Gov API (format YYYY-MM-DD) to a JavaScript Date Object
 const convertUSDateToObject = (date) => {
     let dateObject = new Date(date);
+    dateObject.setHours(0);
     // console.log(`date object: ${dateObject}`)
     return dateObject;
 }
@@ -59,6 +63,7 @@ const convertUSDateToObject = (date) => {
 // Converts UK format dates (format DD/MM/YYY) to a JavaScript Date Object
 const convertUKDateToObject = (date) => {
     let dateObject = new Date(`${date.slice(3, 5)}/${date.slice(0, 2)}/${date.slice(6, 10)}`);
+    dateObject.setHours(0);
     return dateObject;
 }
 
@@ -73,10 +78,12 @@ const convertJSDateToUK = (date) => {
 
 const getWeekends = (year) => {
     let daysOfYear = [];
-    // get all days of year
-    for (let i = 0; i < 365; i++) {
+    // get all days of year, with extra 15 days from previous and subsequent years to account for crossover
+    for (let i = 0; i < 395; i++) {
         let date = new Date(`January 1, ${year}`);
+        date.setDate(date.getDate() - 15);
         date.setDate(date.getDate() + i);
+        date.setHours(0);
         daysOfYear.push(date);
     }
     // get weekends only by removing week days
@@ -87,7 +94,7 @@ const getWeekends = (year) => {
             weekends.push(day.toLocaleDateString('en-GB'));
         }
     }
-    // console.log(`Getweekends: ${nonProcessingDays[3]}`)
+    console.log(`Getweekends: ${nonProcessingDays[2]}`)
     // console.log(nonProcessingDays);
     displayWeekends(weekends);
 }
@@ -95,7 +102,7 @@ const getWeekends = (year) => {
 const displayWeekends = (weekends) => {
     // console.log(weekends);
     const header = document.createElement('h2');
-    header.innerText = `Weekend dates for ${year}`;
+    header.innerText = `Weekend dates for ${year} (including late ${year - 1} and early ${Number(year) + 1})`;
     const list = document.createElement('ul');
     results.append(header, list);
     for (let date of weekends) {
@@ -103,7 +110,7 @@ const displayWeekends = (weekends) => {
         listItem.innerText = date;
         list.append(listItem);
     }
-    // console.log(`Display weekends: ${nonProcessingDays[3]}`)
+    console.log(`Display weekends: ${nonProcessingDays[2]}`)
     displayCRUKHols();
     displayProcessingDays();
 }
@@ -111,6 +118,7 @@ const displayWeekends = (weekends) => {
 const displayCRUKHols = () => {
     let CRUKHols = [];
     CRUKHols.push(new Date('December 23, 2022'), new Date('December 26, 2022'), new Date('December 27, 2022'));
+    nonProcessingDays.push(...CRUKHols);
     const header = document.createElement('h2');
     header.innerText = `CRUK holiday dates for ${year}`;
     const list = document.createElement('ul');
@@ -186,6 +194,7 @@ const displayProcessingDays = () => {
         for (let i = 0; i < dates.length; i++) {
             let newDate = new Date(dates[i]);
             newDate.setDate(`${direction(newDate.getDate())}`);
+            newDate.setHours(0);
             newDates.push(newDate);
         }
         return newDates;
@@ -201,15 +210,18 @@ const displayProcessingDays = () => {
                 if (newDate.getTime() === dates2[j].getTime()) {
                     defaultDate = false;
                     newDate.setDate(`${direction(newDate.getDate())}`);
-                    // console.log(`Date at first stage: ${newDate}`);
+                    newDate.setHours(0);
                     for (let k = 0; k < dates2.length; k++) {
                         if (newDate.getTime() === dates2[k].getTime()) {
                             newDate.setDate(`${direction(newDate.getDate())}`);
-                            // console.log(`Date at second stage: ${newDate}`);
                             for (let l = 0; l < dates2.length; l++) {
                                 if (newDate.getTime() === dates2[l].getTime()) {
-                                    newDate.setDate(`${direction(newDate.getDate())}`)
-                                    // console.log(`Date at third stage: ${newDate}`);
+                                    newDate.setDate(`${direction(newDate.getDate())}`);
+                                    for (let m = 0; m < dates2.length; m++) {
+                                        if (newDate.getTime() === dates2[m].getTime()) {
+                                            newDate.setDate(`${direction(newDate.getDate())}`);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -228,11 +240,12 @@ const displayProcessingDays = () => {
     }
 
     // Column F dates
-    compareDates(claimDates, nonProcessingDays, forwards, 5);
-    let colF = compareDates(claimDates, nonProcessingDays, forwards, 5);
+    let colF = claimDates;
+    compareDates(colF, nonProcessingDays, forwards, 5);
+    colF = compareDates(claimDates, nonProcessingDays, forwards, 5);
 
     // Column E dates
-    let colE = shiftDates(colF, backwards);
+    let colE = shiftDates(claimDates, backwards);      // Note we are shifting the original claim dates backwards, instead of passing in the modified column F dates
     compareDates(colE, nonProcessingDays, backwards, 4);
     colE = compareDates(colE, nonProcessingDays, backwards, 4);
 
