@@ -1,8 +1,27 @@
+const extraDatesDisplay = document.querySelector('#cruk-dates-display');
+const extraDates = document.querySelector('#extra-dates');
+const userInput = document.querySelector('#cruk-dates');
 const button = document.querySelector('#getDates');
 const results = document.querySelector('#results')
-let year = document.querySelector('#year-select');
 const processingDays = document.querySelector('#processingDays');
+let year = document.querySelector('#year-select');
 let nonProcessingDays = [];
+
+const displayCRUKHols = () => {
+    let CRUKHols = [];
+    CRUKHols.push(new Date('December 23, 2022'), new Date('December 26, 2022'), new Date('December 27, 2022'));
+    nonProcessingDays.push(...CRUKHols);
+    const header = document.createElement('h2');
+    header.innerText = `CRUK holiday dates for ${year}`;
+    const list = document.createElement('ul');
+    results.append(header, list);
+    for (let date of CRUKHols) {
+        const listItem = document.createElement('li');
+        listItem.innerText = date;
+        list.append(listItem);
+        nonProcessingDays.push(date);
+    }
+}
 
 function getBankHols() {
     fetch(`https://www.gov.uk/bank-holidays.json`)
@@ -115,21 +134,7 @@ const displayWeekends = (weekends) => {
     displayProcessingDays();
 }
 
-const displayCRUKHols = () => {
-    let CRUKHols = [];
-    CRUKHols.push(new Date('December 23, 2022'), new Date('December 26, 2022'), new Date('December 27, 2022'));
-    nonProcessingDays.push(...CRUKHols);
-    const header = document.createElement('h2');
-    header.innerText = `CRUK holiday dates for ${year}`;
-    const list = document.createElement('ul');
-    results.append(header, list);
-    for (let date of CRUKHols) {
-        const listItem = document.createElement('li');
-        listItem.innerText = date;
-        list.append(listItem);
-        nonProcessingDays.push(date);
-    }
-}
+
 
 // Column A
 const displayProcessingDays = () => {
@@ -295,3 +300,26 @@ button.addEventListener('submit', function (e) {
     e.preventDefault();
     getBankHols();
 });
+
+// Add extra date items to list on submission
+extraDates.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const item = userInput.value;
+    const newItem = document.createElement('li');
+    const deleteButton = document.createElement('button');
+    const breakLine = document.createElement('br');
+    newItem.innerText = `${item} `;
+    newItem.style.display = "inline";
+    deleteButton.innerText = " - ";
+    extraDatesDisplay.append(newItem, deleteButton, breakLine);
+    userInput.value = "";
+})
+
+// Clicking on ' - ' button to remove list item
+extraDatesDisplay.addEventListener('click', function(e) {
+    if (e.target.nodeName === "BUTTON") {
+        e.target.previousElementSibling.remove();
+        e.target.nextElementSibling.remove();
+        e.target.remove();
+    }
+})

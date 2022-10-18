@@ -12,6 +12,15 @@
 <body>
     <h1>Direct Debit Processing Calendar</h1>
     <div>
+        <form id="extra-dates">
+            <br>
+            <label for="cruk-dates">Enter any extra CRUK holiday dates (e.g. Christmas) in this field and click 'Add.' Please enter in DD/MM/YYYY format:</label>
+            <input type="text" name="date" id="cruk-dates">
+            <br>
+            <button type="submit">Add</button>
+        </form>
+        <div id="cruk-dates-display">
+        </div>
         <form action="#" method="GET" id="getDates">
             <label for="year-select">Choose a year:</label>
             <select name="year" id="year-select">
