@@ -64,8 +64,8 @@ const convertUKDateToObject = (date) => {
 
 // Converts JavaScript Date Object to UK display format (DD/MM/YYYY)
 const convertJSDateToUK = (date) => {
-    let day = date.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2});
-    let month = (date.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2});
+    let day = date.getDate().toLocaleString('en-US', { minimumIntegerDigits: 2 });
+    let month = (date.getMonth() + 1).toLocaleString('en-US', { minimumIntegerDigits: 2 });
     let year = date.getFullYear();
     let ukDate = `${day}/${month}/${year}`
     return ukDate;
@@ -74,7 +74,7 @@ const convertJSDateToUK = (date) => {
 const getWeekends = (year) => {
     let daysOfYear = [];
     // get all days of year
-    for (let i=0; i < 365; i++) {
+    for (let i = 0; i < 365; i++) {
         let date = new Date(`January 1, ${year}`);
         date.setDate(date.getDate() + i);
         daysOfYear.push(date);
@@ -112,7 +112,7 @@ const displayCRUKHols = () => {
     let CRUKHols = [];
     CRUKHols.push(new Date('December 23, 2022'), new Date('December 26, 2022'), new Date('December 27, 2022'));
     const header = document.createElement('h2');
-    header.innerText = `CRUK holiday dates for (${year})`;
+    header.innerText = `CRUK holiday dates for ${year}`;
     const list = document.createElement('ul');
     results.append(header, list);
     for (let date of CRUKHols) {
@@ -157,19 +157,41 @@ const displayProcessingDays = () => {
     let claimDates = [];
     for (let i = 2; i < table.rows.length; i++) {
         if (i % 2 === 0) {
-            let claimDate = `05/${month.toLocaleString('en-US', {minimumIntegerDigits: 2})}/${year}`;
+            let claimDate = `05/${month.toLocaleString('en-US', { minimumIntegerDigits: 2 })}/${year}`;
             table.rows[i].cells[0].innerText = claimDate;
             claimDates.push(convertUKDateToObject(claimDate));
-            
+
         } else if (i % 2 === 1) {
-            let claimDate = `19/${month.toLocaleString('en-US', {minimumIntegerDigits: 2})}/${year}`;
+            let claimDate = `19/${month.toLocaleString('en-US', { minimumIntegerDigits: 2 })}/${year}`;
             table.rows[i].cells[0].innerText = claimDate;
             claimDates.push(convertUKDateToObject(claimDate));
             month++;
         }
     }
-    
-    // Column F dates
+
+     // Pass the below functions as the 'direction' argument to other functions in order to push days either forwards or backwards;
+     function forwards(a) {
+        a++;
+        return a;
+    }
+    function backwards(a) {
+        a--;
+        return a;
+    }
+
+    // Shift dates back or forward by 1 day, using 'forwards' or 'backwards' utility functions as the direction argument (use this before comparing with non-processing days)
+    function shiftDates(dates, direction) {
+        let newDates = [];
+        // Shift dates back by 1
+        for (let i = 0; i < dates.length; i++) {
+            let newDate = new Date(dates[i]);
+            newDate.setDate(`${direction(newDate.getDate())}`);
+            newDates.push(newDate);
+        }
+        return newDates;
+    }
+
+    // Use to compare dates with nonProcessing days and return the next (or previous) working day, depending on the direction specified. Populates a given table column with results
     function compareDates(dates1, dates2, direction, column) {
         let resultDates = [];
         let defaultDate = true;
@@ -205,71 +227,43 @@ const displayProcessingDays = () => {
         return resultDates;
     }
 
-    // Pass the below functions as the 'direction' argument to count days either forwards or backwards;
-    function forwards(a) {
-        a++;
-        return a;
-    } 
-    function backwards(a) {
-        a--;
-        return a;
-    }
-
+    // Column F dates
     compareDates(claimDates, nonProcessingDays, forwards, 5);
-    let paymentDates = compareDates(claimDates, nonProcessingDays, forwards, 5);
-
-    // console.log(paymentDates);
-
-
-    // Shift dates back by 1 day (use this before comparing with non-processing days)
-    function shiftDatesBack(dates) {
-        let newDates = [];
-        // Shift dates back by 1
-        for (let i = 0; i < dates.length; i++) {
-            let newDate = new Date(dates[i]);
-            newDate.setDate(newDate.getDate() - 1);
-            newDates.push(newDate);
-        }
-        return newDates;
-    }
+    let colF = compareDates(claimDates, nonProcessingDays, forwards, 5);
 
     // Column E dates
-    let colE = shiftDatesBack(paymentDates);
+    let colE = shiftDates(colF, backwards);
     compareDates(colE, nonProcessingDays, backwards, 4);
     colE = compareDates(colE, nonProcessingDays, backwards, 4);
-    
+
     // Column D dates
-    let colD = shiftDatesBack(colE);
+    let colD = shiftDates(colE, backwards);
     compareDates(colD, nonProcessingDays, backwards, 3);
     colD = compareDates(colD, nonProcessingDays, backwards, 3);
 
     // Column C dates
-    let colC = shiftDatesBack(colD);
+    let colC = shiftDates(colD, backwards);
     compareDates(colC, nonProcessingDays, backwards, 2);
     colC = compareDates(colC, nonProcessingDays, backwards, 2);
 
-    // Column B dates
-    let colB = shiftDatesBack(colC);
+    // Column B dates (shifting back 3 days)
+    let colB = shiftDates(colC, backwards);
     colB = compareDates(colB, nonProcessingDays, backwards, 1);
-    colB = shiftDatesBack(colB);   // Shifting back a 2nd day
+    colB = shiftDates(colB, backwards);   // Shifting back a 2nd day
     colB = compareDates(colB, nonProcessingDays, backwards, 1);
-    colB = shiftDatesBack(colB);   // Shifting back a 3rd day
+    colB = shiftDates(colB, backwards);   // Shifting back a 3rd day
     colB = compareDates(colB, nonProcessingDays, backwards, 1);
-/*
-    // Column D dates
-    function columnDdates(dates) {
-        let colDdates = [];
-        for (let i = 0; i < dates.length; i++) {
-            let newDate = new Date(dates[i]);
-            newDate.setDate(newDate.getDate() - 1);
-            colDdates.push(newDate);
-        }
-        compareDates(colDdates, nonProcessingDays, backwards, 3);
-    }
-    columnDdates(bankProcessingDates);
-    let colDdates = columnDdates(bankProcessingDates);
 
-    */
+    // Column G dates
+    let colG = shiftDates(colF, forwards);
+    compareDates(colG, nonProcessingDays, forwards, 6);
+    colG = compareDates(colG, nonProcessingDays, forwards, 6);
+
+    // Column H dates
+    let colH = shiftDates(colG, forwards);
+    compareDates(colH, nonProcessingDays, forwards, 7);
+    colH = compareDates(colH, nonProcessingDays, forwards, 7);
+
 
     // console.log(`Claim dates: ${claimDates}`);
     // console.log(`Non processing days: ${nonProcessingDays}`);
@@ -280,11 +274,11 @@ const displayProcessingDays = () => {
 
 
 
-year.addEventListener('change', function() {
+year.addEventListener('change', function () {
     year = year.value;
 });
 
-button.addEventListener('submit', function(e) {
+button.addEventListener('submit', function (e) {
     e.preventDefault();
     getBankHols();
 });
