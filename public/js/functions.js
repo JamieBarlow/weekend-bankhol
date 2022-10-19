@@ -1,27 +1,11 @@
-const extraDatesDisplay = document.querySelector('#cruk-dates-display');
-const extraDates = document.querySelector('#extra-dates');
+const extraDatesForm = document.querySelector('#extra-dates');
 const userInput = document.querySelector('#cruk-dates');
+const extraDatesDisplay = document.querySelector('#cruk-dates-display');
 const button = document.querySelector('#getDates');
-const results = document.querySelector('#results')
+const results = document.querySelector('#nonProcessingDates-display')
 const processingDays = document.querySelector('#processingDays');
 let year = document.querySelector('#year-select');
 let nonProcessingDays = [];
-
-const displayCRUKHols = () => {
-    let CRUKHols = [];
-    CRUKHols.push(new Date('December 23, 2022'), new Date('December 26, 2022'), new Date('December 27, 2022'));
-    nonProcessingDays.push(...CRUKHols);
-    const header = document.createElement('h2');
-    header.innerText = `CRUK holiday dates for ${year}`;
-    const list = document.createElement('ul');
-    results.append(header, list);
-    for (let date of CRUKHols) {
-        const listItem = document.createElement('li');
-        listItem.innerText = date;
-        list.append(listItem);
-        nonProcessingDays.push(date);
-    }
-}
 
 function getBankHols() {
     fetch(`https://www.gov.uk/bank-holidays.json`)
@@ -130,7 +114,6 @@ const displayWeekends = (weekends) => {
         list.append(listItem);
     }
     console.log(`Display weekends: ${nonProcessingDays[2]}`)
-    displayCRUKHols();
     displayProcessingDays();
 }
 
@@ -301,18 +284,41 @@ button.addEventListener('submit', function (e) {
     getBankHols();
 });
 
-// Add extra date items to list on submission
-extraDates.addEventListener("submit", function(e) {
-    e.preventDefault();
-    const item = userInput.value;
+// Runs only once to generate header
+let displayCRUKHolsHeader = (function() {
+    let executed = false;
+    return function() {
+        if (!executed) {
+            executed = true;
+            const header = document.createElement('h2');
+            header.innerText = `CRUK holiday dates:`;
+            const list = document.createElement('ul');
+            extraDatesDisplay.append(header, list);
+        }
+    }
+})();
+
+// Display optional CRUK holidays beneath CRUK Hols header
+const displayCRUKHols = (date) => {
+    displayCRUKHolsHeader();
+    // Creates new list items
     const newItem = document.createElement('li');
     const deleteButton = document.createElement('button');
     const breakLine = document.createElement('br');
-    newItem.innerText = `${item} `;
+    newItem.innerText = `${convertJSDateToUK(date)}`;
     newItem.style.display = "inline";
     deleteButton.innerText = " - ";
     extraDatesDisplay.append(newItem, deleteButton, breakLine);
-    userInput.value = "";
+    console.log(date);
+    console.log(nonProcessingDays);
+}
+
+// Add extra date items to list on submission
+extraDatesForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    let newDate = new Date(`${convertUKDateToObject(userInput.value)}`);
+    nonProcessingDays.push(newDate);
+    displayCRUKHols(newDate);
 })
 
 // Clicking on ' - ' button to remove list item
