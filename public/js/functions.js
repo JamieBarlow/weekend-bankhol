@@ -119,7 +119,7 @@ const displayWeekends = (weekends) => {
 
 
 
-// Column A
+// Display dates
 const displayProcessingDays = () => {
     const header = document.createElement('h2');
     header.innerText = "Processing days calendar:";
@@ -148,6 +148,7 @@ const displayProcessingDays = () => {
     table.rows[1].cells[5].innerText = "Step 2 - 5th or 19th of the month but must be a working day, if falls on weekend of bank holiday, the payment date will be next working day following the 5th or 19th.";
     table.rows[1].cells[6].innerText = "Step 5 - 1 working day after the payment date";
     table.rows[1].cells[7].innerText = "Step 6 - 2 working days after the payment date";
+    
     // Column A dates
     let month = 1;
     let claimDates = [];
@@ -214,12 +215,12 @@ const displayProcessingDays = () => {
                             }
                         }
                     }
-                    table.rows[i + 2].cells[column].innerText = newDate;
+                    table.rows[i + 2].cells[column].innerText = convertJSDateToUK(newDate);
                     resultDates.push(newDate);
                 }
             }
             if (defaultDate === true) {
-                table.rows[i + 2].cells[column].innerText = dates1[i];
+                table.rows[i + 2].cells[column].innerText = convertJSDateToUK(dates1[i]);
                 resultDates.push(dates1[i]);
             }
             defaultDate = true;
