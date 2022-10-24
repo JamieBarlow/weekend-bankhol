@@ -1,6 +1,6 @@
 const extraDatesForm = document.querySelector('#extra-dates');
-const userInput = document.querySelector('#cruk-dates');
-const extraDatesDisplay = document.querySelector('#cruk-dates-display');
+const userInput = document.querySelector('#company-dates');
+const extraDatesDisplay = document.querySelector('#company-dates-display');
 const button = document.querySelector('#getDates');
 const results = document.querySelector('#nonProcessingDates-display')
 const processingDays = document.querySelector('#processingDays');
@@ -286,22 +286,22 @@ button.addEventListener('submit', function (e) {
 });
 
 // Runs only once to generate header
-let displayCRUKHolsHeader = (function() {
+let displayCompanyHolsHeader = (function() {
     let executed = false;
     return function() {
         if (!executed) {
             executed = true;
             const header = document.createElement('h2');
-            header.innerText = `CRUK holiday dates:`;
+            header.innerText = `Company holiday dates:`;
             const list = document.createElement('ul');
             extraDatesDisplay.append(header, list);
         }
     }
 })();
 
-// Display optional CRUK holidays beneath CRUK Hols header
-const displayCRUKHols = (date) => {
-    displayCRUKHolsHeader();
+// Display optional company holidays beneath Company Hols header
+const displayCompanyHols = (date) => {
+    displayCompanyHolsHeader();
     // Creates new list items
     const newItem = document.createElement('li');
     const deleteButton = document.createElement('button');
@@ -319,7 +319,7 @@ extraDatesForm.addEventListener("submit", function(e) {
     e.preventDefault();
     let newDate = new Date(`${convertUKDateToObject(userInput.value)}`);
     nonProcessingDays.push(newDate);
-    displayCRUKHols(newDate);
+    displayCompanyHols(newDate);
 })
 
 // Clicking on ' - ' button to remove list item
@@ -330,3 +330,32 @@ extraDatesDisplay.addEventListener('click', function(e) {
         e.target.remove();
     }
 })
+
+
+// Exporting variables and functions
+const variables = {
+    extraDatesForm,
+    userInput,
+    extraDatesDisplay,
+    button,
+    results,
+    processingDays,
+    year,
+    nonProcessingDays
+}
+
+const functions = {
+    getBankHols,
+    displayBankHols,
+    convertDateToUK,
+    convertUKDateToObject,
+    convertUSDateToObject,
+    convertJSDateToUK,
+    getWeekends,
+    displayWeekends,
+    displayProcessingDays,
+    displayCompanyHolsHeader,
+    displayCompanyHols
+}
+
+export { variables, functions }
