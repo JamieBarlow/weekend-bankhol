@@ -14,6 +14,9 @@
 
 ## Features :heavy_check_mark:
 
+- Bank holidays are calculated using the [UK Government Bank Holidays API](https://www.api.gov.uk/gds/bank-holidays/#bank-holidays), which returns bank holiday data in JSON format. Depending on the year selected, this is parsed and added to a list of bank holiday dates (from the current year and late previous year, due to processes overlapping calendar years).
+- Weekend dates are calculated using the [JavaScript Date object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date). Again this includes some overlap into the previous and next calendar year.
+- Your organisation may have extra holidays or office closures, which are not accounted for in the standard list of bank holidays or weekends. The app therefore allows you to enter further dates individually ('DD/MM/YYYY' format). Clicking 'Add' will add this to a display list, and also to the collection of 'non-processing' dates that are factored into the calculation.
 - The web app can currently be run in 2 different ways, depending on use-case and enterprise access privileges:
   - Via Node.js, using Express to host the app via local server
   - Via 'Live Server' extension within the VSCode editor
@@ -25,7 +28,8 @@
   - **Claim run** - the claim file submission depends on this process, which runs 1 working day before. The date will again be shifted back by 1 working day if this falls on a non-working date.
   - **DD Dedupe Report** - DDs flagged as duplicates will be removed ('de-duplicated') 3 working days before the claim run. To ensure this, if there are any non-working dates which are presented between the default Dedupe date and the claim run date, this date will be shifted backwards by the appropriate number of working days.
   - **ARUDD reporting** - reporting for ARUDD (Automated Return of Unpaid Direct Debits) will occur 1 working day after the payment date. The date will be shifted forwards by 1 working day if this falls on a non-working day.
-  - **ARUDD reporting sweep-up** - this will occur 1 working day after ARUDD reporting, and will be shifted forwards by 1 working day if this falls on a non-working day.
+  - **ARUDD reporting sweep-up** - this will occur 1 working day after ARUDD reporting, and will be shifted forwards by 1 working day if this falls on a non-working day. 
+  - All results are displayed in standard table format, and can be easily viewed or copied as necessary.
 
 ## Technologies :floppy_disk:
 
@@ -46,20 +50,30 @@
 ### Using VSCode Live Server extension
   - From VSCode editor, make sure that you have the ['Live Server'](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension installed
   - From the project folder, right-click the index.html file, and select 'Open with Live Server.'
+- In the text input box, enter any holidays (i.e. office closure dates) from the current *and* previous year (DD/MM/YYYY format) and click the 'Add' button after each entry. Repeat as necessary. You should now see these displayed underneath the form.
+- Choose a year from the dropdown menu
+- Click 'Give me dates'. You should now see a list of ad hoc holiday dates, bank holiday dates, and weekends, followed by a table displaying your DD calendar dates.
 
+## Testing and Debugging :computer:
 
-## Challenges
+- Open the Developer Tools in your browser (in Chrome, Ctrl + Shift + I) and open the Console tab.
+- Type `mocha.run()` in the console and press enter.
+- The test suite should now run and display the results on your page.
+
+## Development Challenges :wrench:
 
 The below challenges have all been accounted for in the design of this app, but they are worthy of consideration to ensure that any future development or changes remain fit for purpose:
 
-- Bank holidays can add multiple non-working days between processing days. As a result, shifting a processing date forwards or backwards by 1 working date may still lead to the adjusted date falling on a non-working day. The app therefore runs checks multiple times, and shifts the date as necessary until it is confirmed that the date provided is a valid working day.
-- Claims at the start of a calendar year will result in lead-up processes that need to occur in the previous calendar year. The app therefore factors in non-processing dates from later in the previous year (bank holidays and weekends). For ad hoc, manually added non-working dates, the user is also asked to provide these for both current and previous calendar years.
+- Bank holidays can add multiple non-working days between processing days. As a result, shifting a processing date forwards or backwards by 1 working date may still lead to the adjusted date falling on a non-working day. The app therefore runs checks multiple times, and shifts the date as necessary until it is confirmed that the date provided is in fact a valid working day.
+- DD claims at the start of a calendar year will result in lead-up processes that need to occur in the previous calendar year. The app therefore factors in non-processing dates from later in the previous year (bank holidays and weekends). For ad hoc, manually added non-working dates, the user is also asked to provide these for both current and previous calendar years.
 - In some cases, follow-up processes will spill over to the next calendar year, so weekends from early in the following year will also be accounted for.
-- The gap between the DD Dedupe Report process and the Claim Run
+- The gap of 3 working days between the DD Dedupe Report process and the Claim Run presents some logical challenges that can easily lead to manual error. A user attempting to calculate this manually might presume that you simply need to find the date 3 days before the claim run, check whether this lands on a non-processing day, and then adjust (shift back 1 working day) as necessary. However, non-working days *between* these 2 dates will also need to be accounted for. The app therefore needs to shift the date back 1 day at a time, checking that this is a valid processing day *each time* , and shifting back the required number of days on each iteration.
+- The app works with a range of date formats: the 'YYYY-MM-DD' format returned by the UK Gov API, the 'DD/MM/YYYY' format (required for DD display and validation), and instances of the [JavaScript Date object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date). All calculations are performed using the JavaScript Date object, so this is reliant on a series of conversion functions. These have been unit-tested - see the [Testing and Debugging](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) section.
+
 
 ## Upcoming features :hourglass:
 
-- Export functionality (Excel files)
+- Export functionality (Excel format)
 - Claim date flexibility: the app is currently limited to claims on the 5th or 19th per month, but this can vary per organisation or via agreement with the participating bank.
 
 ## License :scroll:
