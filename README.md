@@ -58,7 +58,9 @@
 
 - Open the Developer Tools in your browser (in Chrome, Ctrl + Shift + I) and open the Console tab.
 - Type `mocha.run()` in the console and press enter.
-- The test suite should now run and display the results on your page.
+- The test suite should now run and display the results on your page:
+
+![Mocha test screenshot](https://github.com/JamieBarlow/weekend-bankhol/blob/master/resources/mochatest.PNG)
 
 ## Development Challenges :wrench:
 
