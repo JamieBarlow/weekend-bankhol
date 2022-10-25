@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Take Home Salary Calculator :closed_book:</h1>
+  <h1>Direct Debit Processing Calendar :closed_book:</h1>
   <strong>By Jamie Barlow</strong>
 </div>
 
