@@ -6,12 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="node_modules/mocha/mocha.css">
 </head>
 
 <body>
     <h1>Direct Debit Processing Calendar</h1>
     <div>
+        <form id="extra-dates">
+            <br>
+            <label for="company-dates">Please enter any extra company holiday dates (e.g. Christmas office closure dates) in this field and click 'Add.' Include holidays for both the current year <em>and</em> the previous year. Please enter in DD/MM/YYYY format and click 'Add' after each entry:</label>
+            <input type="text" name="date" id="company-dates">
+            <br>
+            <button type="submit">Add</button>
+        </form>
         <form action="#" method="GET" id="getDates">
             <label for="year-select">Choose a year:</label>
             <select name="year" id="year-select">
@@ -27,9 +35,19 @@
             <button>Give me dates</button>
         </form>
     </div>
-    <div id="results"></div>
+    <div id="company-dates-display"></div>
+    <div id="nonProcessingDates-display"></div>
     <div id="processingDays"></div>
-    <script src="js/functions.js"></script>
+    <div id="mocha"></div>
+    <!-- <script src="scripts/require.js"></script> -->
+    <script src="public/js/functions.js" type="module"></script>
+    <script src="node_modules/chai/chai.js"></script>
+    <script src="node_modules/mocha/mocha.js"></script>
+    <script class = "mocha-init">
+        mocha.setup('bdd');
+        mocha.checkLeaks();
+    </script>
+    <script src="test/test.js" type="module"></script>
 </body>
 
 </html>
