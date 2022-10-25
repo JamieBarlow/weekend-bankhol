@@ -37,10 +37,10 @@ const displayBankHols = (thisYear) => {
     results.append(header, list);
     for (let date of thisYear) {
         const listItem = document.createElement('li');
-        let ukDate = convertDateToUK(date);
+        let ukDate = convertGovDateToDMY(date);
         // nonProcessingDays.push(ukDate);
         // console.log(`Bank hol date: ${date}`);
-        nonProcessingDays.push(convertUSDateToObject(date));
+        nonProcessingDays.push(convertGovDateToObject(date));
         // console.log(nonProcessingDays);
         listItem.innerText = ukDate;
         list.append(listItem);
@@ -49,14 +49,14 @@ const displayBankHols = (thisYear) => {
 }
 
 // Converts dates returned from Gov API (format YYYY-MM-DD) to UK display format (DD/MM/YYYY)
-const convertDateToUK = (date) => {
+const convertGovDateToDMY = (date) => {
     // console.log(date);
     date = `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(0, 4)}`;
     return date;
 }
 
 // Converts dates from Gov API (format YYYY-MM-DD) to a JavaScript Date Object
-const convertUSDateToObject = (date) => {
+const convertGovDateToObject = (date) => {
     let dateObject = new Date(date);
     dateObject.setHours(0);
     // console.log(`date object: ${dateObject}`)
@@ -71,7 +71,7 @@ const convertUKDateToObject = (date) => {
 }
 
 // Converts JavaScript Date Object to UK display format (DD/MM/YYYY)
-const convertJSDateToUK = (date) => {
+const convertJSDateToDMY = (date) => {
     let day = date.getDate().toLocaleString('en-US', { minimumIntegerDigits: 2 });
     let month = (date.getMonth() + 1).toLocaleString('en-US', { minimumIntegerDigits: 2 });
     let year = date.getFullYear();
@@ -215,12 +215,12 @@ const displayProcessingDays = () => {
                             }
                         }
                     }
-                    table.rows[i + 2].cells[column].innerText = convertJSDateToUK(newDate);
+                    table.rows[i + 2].cells[column].innerText = convertJSDateToDMY(newDate);
                     resultDates.push(newDate);
                 }
             }
             if (defaultDate === true) {
-                table.rows[i + 2].cells[column].innerText = convertJSDateToUK(dates1[i]);
+                table.rows[i + 2].cells[column].innerText = convertJSDateToDMY(dates1[i]);
                 resultDates.push(dates1[i]);
             }
             defaultDate = true;
@@ -306,7 +306,7 @@ const displayCompanyHols = (date) => {
     const newItem = document.createElement('li');
     const deleteButton = document.createElement('button');
     const breakLine = document.createElement('br');
-    newItem.innerText = `${convertJSDateToUK(date)}`;
+    newItem.innerText = `${convertJSDateToDMY(date)}`;
     newItem.style.display = "inline";
     deleteButton.innerText = " - ";
     extraDatesDisplay.append(newItem, deleteButton, breakLine);
@@ -347,10 +347,10 @@ const variables = {
 const functions = {
     getBankHols,
     displayBankHols,
-    convertDateToUK,
+    convertGovDateToDMY,
     convertUKDateToObject,
-    convertUSDateToObject,
-    convertJSDateToUK,
+    convertGovDateToObject,
+    convertJSDateToDMY,
     getWeekends,
     displayWeekends,
     displayProcessingDays,

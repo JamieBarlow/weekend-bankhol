@@ -10,18 +10,18 @@ describe('+', () => {
     })
 })
 
-describe('convertDatetoUK', () => {
+describe('convertGovDateToDMY', () => {
     it('converts dates returned from Gov API (format YYYY-MM-DD) to UK display format (DD/MM/YYYY)', () => {
         const expected = '01/06/2022';
-        const actual = functions.convertDateToUK('2022-06-01');
+        const actual = functions.convertGovDateToDMY('2022-06-01');
         assert.strictEqual(actual, expected);
     })
 })
 
-describe('convertUSDateToObject', () => {
+describe('convertGovDateToObject', () => {
     it('Converts dates from Gov API (format YYYY-MM-DD) to a JavaScript Date Object', () => {
         const expected = new Date('January 1, 2022');
-        const actual = functions.convertUSDateToObject('2022-01-01');
+        const actual = functions.convertGovDateToObject('2022-01-01');
         assert.deepEqual(actual, expected)
     })
 })
@@ -34,10 +34,10 @@ describe('convertUKDateToObject', () => {
     })
 })
 
-describe('convertJSDateToUK', () => {
+describe('convertJSDateToDMY', () => {
     it('Converts JavaScript Date Object to UK display format (DD/MM/YYYY)', () => {
         const expected = '01/01/2022';
-        const actual = functions.convertJSDateToUK(new Date('January 1, 2022'));
+        const actual = functions.convertJSDateToDMY(new Date('January 1, 2022'));
         assert.deepEqual(actual, expected);
     })
 })
