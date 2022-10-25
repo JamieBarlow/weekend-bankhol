@@ -56,6 +56,7 @@
 
 ## Testing and Debugging :computer:
 
+The app uses a four-phase test pattern (setup, exercise, verify, teardown) to unit-test functions and ensure that they are reliable. To run the test suite:
 - Open the Developer Tools in your browser (in Chrome, Ctrl + Shift + I) and open the Console tab.
 - Type `mocha.run()` in the console and press enter.
 - The test suite should now run and display the results on your page:
@@ -70,11 +71,12 @@ The below challenges have all been accounted for in the design of this app, but 
 - DD claims at the start of a calendar year will result in lead-up processes that need to occur in the previous calendar year. The app therefore factors in non-processing dates from later in the previous year (bank holidays and weekends). For ad hoc, manually added non-working dates, the user is also asked to provide these for both current and previous calendar years.
 - In some cases, follow-up processes will spill over to the next calendar year, so weekends from early in the following year will also be accounted for.
 - The gap of 3 working days between the DD Dedupe Report process and the Claim Run presents some logical challenges that can easily lead to manual error. A user attempting to calculate this manually might presume that you simply need to find the date 3 days before the claim run, check whether this lands on a non-processing day, and then adjust (shift back 1 working day) as necessary. However, non-working days *between* these 2 dates will also need to be accounted for. The app therefore needs to shift the date back 1 day at a time, checking that this is a valid processing day *each time* , and shifting back the required number of days on each iteration.
-- The app works with a range of date formats: the 'YYYY-MM-DD' format returned by the UK Gov API, the 'DD/MM/YYYY' format (required for DD display and validation), and instances of the [JavaScript Date object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date). All calculations are performed using the JavaScript Date object, so this is reliant on a series of conversion functions. These have been unit-tested - see the [Testing and Debugging](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) section.
+- The app works with a range of date formats: the 'YYYY-MM-DD' format returned by the UK Gov API, the 'DD/MM/YYYY' format (required for DD display and validation), and instances of the [JavaScript Date object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date). All calculations are performed using the JavaScript Date object, so this is reliant on a series of conversion functions. These have been unit-tested - see the [Testing and Debugging](https://github.com/JamieBarlow/weekend-bankhol/edit/master/README.md#testing-and-debugging-computer) section.
 
 
 ## Upcoming features :hourglass:
 
+- Further automated unit-testing and integration-testing (currently tests apply to date conversion functionality)
 - Export functionality (Excel format)
 - Claim date flexibility: the app is currently limited to claims on the 5th or 19th per month, but this can vary per organisation or via agreement with the participating bank.
 
