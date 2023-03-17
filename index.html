@@ -9,6 +9,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap');
       </style>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="public/css/style.css">
     <link rel="stylesheet" href="node_modules/mocha/mocha.css">
 </head>
@@ -24,7 +25,7 @@
                 <label for="company-dates">Please enter any extra company holiday dates (e.g. Christmas office closure dates) in this field and click 'Add.' Include holidays for both the current year <em>and</em> the previous year. Please enter in DD/MM/YYYY format and click 'Add' after each entry:</label>
                 <input type="text" name="date" id="company-dates">
                 <br>
-                <button type="submit">Add</button>
+                <button type="button" class="btn btn-light">Add</button>
             </form>
             <form action="#" method="GET" id="getDates">
                 <label for="year-select">Choose a year:</label>
