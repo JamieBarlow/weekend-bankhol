@@ -125,6 +125,7 @@ const displayProcessingDays = () => {
     header.innerText = "Processing days calendar:";
     // Displaytable
     const table = document.createElement('table');
+    table.classList.add('table', 'table-primary', 'table-striped', 'table-hover');
     for (let i = 0; i < 26; i++) {
         const tr = table.insertRow();
         for (let j = 0; j < 8; j++) {
@@ -149,6 +150,10 @@ const displayProcessingDays = () => {
     table.rows[1].cells[6].innerText = "Step 5 - 1 working day after the payment date";
     table.rows[1].cells[7].innerText = "Step 6 - 2 working days after the payment date";
     
+    table.rows[0].classList.add('table-dark')
+    table.rows[1].classList.add('table-info')
+    
+
     // Column A dates
     let month = 1;
     let claimDates = [];
