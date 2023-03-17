@@ -8,7 +8,7 @@
     <title>Home Page</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap');
-      </style>
+    </style>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="public/css/style.css">
     <link rel="stylesheet" href="node_modules/mocha/mocha.css">
@@ -21,11 +21,18 @@
         </section>
         <section class="dates-form wrapper">
             <form id="extra-dates">
-                <br>
-                <label for="company-dates">Please enter any extra company holiday dates (e.g. Christmas office closure dates) in this field and click 'Add.' Include holidays for both the current year <em>and</em> the previous year. Please enter in DD/MM/YYYY format and click 'Add' after each entry:</label>
-                <input type="text" name="date" id="company-dates">
-                <br>
-                <button type="button" class="btn btn-light">Add</button>
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <label for="company-dates" class="form-label">Please enter any extra company holiday dates (e.g.
+                            Christmas office closure dates) in this field and click 'Add.' Include holidays for both the
+                            current
+                            year <em>and</em> the previous year. Please enter in DD/MM/YYYY format and click 'Add' after
+                            each
+                            entry:</label>
+                        <div class="col-sm-3"><input type="date" class="form-control" id="company-dates" required></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
             </form>
             <form action="#" method="GET" id="getDates">
                 <label for="year-select">Choose a year:</label>
@@ -51,7 +58,7 @@
     <script src="public/js/functions.js" type="module"></script>
     <script src="node_modules/chai/chai.js"></script>
     <script src="node_modules/mocha/mocha.js"></script>
-    <script class = "mocha-init">
+    <script class="mocha-init">
         mocha.setup('bdd');
         mocha.checkLeaks();
     </script>

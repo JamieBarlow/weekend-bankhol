@@ -317,7 +317,7 @@ const displayCompanyHols = (date) => {
 // Add extra date items to list on submission
 extraDatesForm.addEventListener("submit", function(e) {
     e.preventDefault();
-    let newDate = new Date(`${convertUKDateToObject(userInput.value)}`);
+    let newDate = new Date(`${userInput.value}`);
     nonProcessingDays.push(newDate);
     displayCompanyHols(newDate);
 })
