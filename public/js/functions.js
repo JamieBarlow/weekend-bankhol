@@ -5,8 +5,10 @@ let year = document.querySelector('#year-select');
 let namedDaysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 const companyDatesDisplay = document.querySelector('#company-dates-display');
-const bankHolsWeekends = document.querySelector('#bankHolsWeekends-display');
-const bankHolsTable = document.querySelector('#bankHols');
+const bankHols = document.querySelector('#bankHols-display');
+const weekends = document.querySelector('#weekends-display');
+const bankHolsTable = document.querySelector('#bankHolsTable');
+const weekendsTable = document.querySelector('#weekendsTable');
 const processingDays = document.querySelector('#processingDays');
 
 let nonProcessingDays = [];
@@ -49,7 +51,7 @@ function getBankHols() {
 const displayBankHols = (dates, daysOfWeek, bankHolNames) => {
     const header = document.createElement('h2');
     header.innerText = `Bank holiday dates for ${year} (and late ${year - 1})`;
-    bankHolsWeekends.prepend(header);
+    bankHols.prepend(header);
     const tableBody = document.querySelector('#bankHolTable__body');
     let rowIndex = 1;
     for (let i = 0; i < dates.length; i++) {
@@ -73,6 +75,57 @@ const displayBankHols = (dates, daysOfWeek, bankHolNames) => {
         nonProcessingDays.push(convertGovDateToObject(dates[i]));
         rowIndex++;
     }
+}
+
+const getWeekends = (year) => {
+    let daysOfYear = [];
+    // get all days of year, with extra 15 days from previous and subsequent years to account for crossover
+    for (let i = 0; i < 395; i++) {
+        let date = new Date(`January 1, ${year}`);
+        date.setDate(date.getDate() - 15);
+        date.setDate(date.getDate() + i);
+        date.setHours(0);
+        daysOfYear.push(date);
+    }
+    // get weekends only by removing week days
+    let weekends = [];
+    let weekendDays = [];
+    for (let day of daysOfYear) {
+        if (day.getDay() === 6 || day.getDay() === 0) {
+            nonProcessingDays.push(day);
+            weekends.push(day.toLocaleDateString('en-GB'));
+            weekendDays.push(namedDaysOfWeek[day.getDay()]);
+        }
+    }
+    
+    console.log(`Getweekends: ${nonProcessingDays[2]}`)
+    // console.log(nonProcessingDays);
+    displayWeekends(weekends, weekendDays);
+}
+
+const displayWeekends = (dates, weekendDays) => {
+    // console.log(weekends);
+    const header = document.createElement('h2');
+    header.innerText = `Weekend dates for ${year} (including late ${year - 1} and early ${Number(year) + 1})`;
+    weekends.prepend(header);
+    const tableBody = document.querySelector('#weekendsTable__body');
+    let rowIndex = 1;
+    for (let i = 0; i < dates.length; i++) {
+        const row = document.createElement('tr');
+        tableBody.append(row);
+        // Generate column 1 cells (dates)
+        const dateCell = document.createElement('th');
+        dateCell.scope = "row";
+        dateCell.innerText = dates[i];
+        tableBody.childNodes[rowIndex].append(dateCell);
+        // Generate column 2 cells (day of week)
+        const dayCell = document.createElement('td');
+        dayCell.innerText = weekendDays[i];
+        tableBody.childNodes[rowIndex].append(dayCell);
+        rowIndex++;
+    }
+    console.log(`Display weekends: ${nonProcessingDays[2]}`)
+    displayProcessingDays();
 }
 
 // Converts dates returned from Gov API (format YYYY-MM-DD) to UK display format (DD/MM/YYYY)
@@ -106,47 +159,7 @@ const convertJSDateToDMY = (date) => {
     return ukDate;
 }
 
-const getWeekends = (year) => {
-    let daysOfYear = [];
-    // get all days of year, with extra 15 days from previous and subsequent years to account for crossover
-    for (let i = 0; i < 395; i++) {
-        let date = new Date(`January 1, ${year}`);
-        date.setDate(date.getDate() - 15);
-        date.setDate(date.getDate() + i);
-        date.setHours(0);
-        daysOfYear.push(date);
-    }
-    // get weekends only by removing week days
-    let weekends = [];
-    for (let day of daysOfYear) {
-        if (day.getDay() === 6 || day.getDay() === 0) {
-            nonProcessingDays.push(day);
-            weekends.push(day.toLocaleDateString('en-GB'));
-        }
-    }
-    console.log(`Getweekends: ${nonProcessingDays[2]}`)
-    // console.log(nonProcessingDays);
-    displayWeekends(weekends);
-}
-
-const displayWeekends = (weekends) => {
-    // console.log(weekends);
-    const header = document.createElement('h2');
-    header.innerText = `Weekend dates for ${year} (including late ${year - 1} and early ${Number(year) + 1})`;
-    const list = document.createElement('ul');
-    bankHolsWeekends.append(header, list);
-    for (let date of weekends) {
-        const listItem = document.createElement('li');
-        listItem.innerText = date;
-        list.append(listItem);
-    }
-    console.log(`Display weekends: ${nonProcessingDays[2]}`)
-    displayProcessingDays();
-}
-
-
-
-// Display dates
+// Display processing dates
 const displayProcessingDays = () => {
     const header = document.createElement('h2');
     header.innerText = "Processing days calendar:";
@@ -221,7 +234,7 @@ const displayProcessingDays = () => {
         return newDates;
     }
 
-    // Use to compare dates with nonProcessing days and return the next (or previous) working day, depending on the direction specified. Populates a given table column with bankHolsWeekends
+    // Use to compare dates with nonProcessing days and return the next (or previous) working day, depending on the direction specified. Populates a given table column with bankHols
     function compareDates(dates1, dates2, direction, column) {
         let resultDates = [];
         let defaultDate = true;
@@ -316,10 +329,11 @@ chooseYear.addEventListener('submit', function (e) {
     e.preventDefault();
     getBankHols();
     reveal(companyDatesDisplay);
-    reveal(bankHolsWeekends);
+    reveal(bankHols);
+    reveal(weekends);
 });
 
-// Displays bankHolsWeekends for a given element
+// Displays bankHols for a given element
 function reveal(section) {
     section.style.display = "block";
 }
@@ -377,7 +391,7 @@ const variables = {
     extraDates,
     companyDatesDisplay,
     chooseYear,
-    bankHolsWeekends,
+    bankHols,
     processingDays,
     year,
     nonProcessingDays
