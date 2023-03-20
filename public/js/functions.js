@@ -2,9 +2,11 @@ const extraDatesForm = document.querySelector('#extra-dates__form');
 const extraDates = document.querySelector('#company-dates');
 const chooseYear = document.querySelector('#chooseYear');
 let year = document.querySelector('#year-select');
+let namedDaysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 const companyDatesDisplay = document.querySelector('#company-dates-display');
-const bankHolsWeekends = document.querySelector('#bankHolsWeekends-display')
+const bankHolsWeekends = document.querySelector('#bankHolsWeekends-display');
+const bankHolsTable = document.querySelector('#bankHols');
 const processingDays = document.querySelector('#processingDays');
 
 let nonProcessingDays = [];
@@ -19,35 +21,58 @@ function getBankHols() {
             throw new Error('request failed!');
         }, networkError => console.log(networkError.message))
         .then(data => {
-            const result = (data['england-and-wales'].events);
-            const dates = result.map(a => {
-                return a.date;
+            const results = (data['england-and-wales'].events);
+            console.log(data['england-and-wales']);
+            let nonProcessing = [];
+            let thisYearResults = results.filter(result => result.date.slice(0, 4) === year);
+            let lastYearResults = results.filter(result => result.date.slice(0, 4) === ((year - 1).toString()));
+            let endOflastYearResults = lastYearResults.filter(item => item.date.slice(5, 7) === '12');
+            nonProcessing.push(...thisYearResults, ...endOflastYearResults);
+
+            // Extract dates from nonProcessing results
+            const dates = nonProcessing.map(result => result.date);
+            // Extract day of week from results
+            const daysOfWeek = dates.map(result => {
+                let date = new Date(result);
+                let day = date.getDay();
+                day = namedDaysOfWeek[day];
+                return day;
             });
-            let thisYear = dates.filter(date => date.slice(0, 4) === year);
-            let lastYear = dates.filter(date => date.slice(0, 4) === ((year - 1).toString()));
-            lastYear = lastYear.filter(item => item.slice(5, 7) === '12');
-            thisYear.push(...lastYear);
-            displayBankHols(thisYear);
+            // Extract Bank Holiday name from results
+            const bankHolNames = nonProcessing.map(result => result.title);
+
+            displayBankHols(dates, daysOfWeek, bankHolNames);
             getWeekends(year);
         });
 }
 
-const displayBankHols = (thisYear) => {
+const displayBankHols = (dates, daysOfWeek, bankHolNames) => {
     const header = document.createElement('h2');
     header.innerText = `Bank holiday dates for ${year} (and late ${year - 1})`;
-    const list = document.createElement('ul');
-    bankHolsWeekends.append(header, list);
-    for (let date of thisYear) {
-        const listItem = document.createElement('li');
-        let ukDate = convertGovDateToDMY(date);
-        // nonProcessingDays.push(ukDate);
-        // console.log(`Bank hol date: ${date}`);
-        nonProcessingDays.push(convertGovDateToObject(date));
-        // console.log(nonProcessingDays);
-        listItem.innerText = ukDate;
-        list.append(listItem);
+    bankHolsWeekends.prepend(header);
+    const tableBody = document.querySelector('#bankHolTable__body');
+    let rowIndex = 1;
+    for (let i = 0; i < dates.length; i++) {
+        const row = document.createElement('tr');
+        tableBody.append(row);
+        // Generate column 1 cells (dates)
+        const dateCell = document.createElement('th');
+        let ukDate = convertGovDateToDMY(dates[i]);
+        dateCell.scope = "row";
+        dateCell.innerText = ukDate;
+        tableBody.childNodes[rowIndex].append(dateCell);
+        // Generate column 2 cells (day of week)
+        const dayCell = document.createElement('td');
+        dayCell.innerText = daysOfWeek[i];
+        tableBody.childNodes[rowIndex].append(dayCell);
+        // Generate column 3 cells (bank holiday title)
+        const title = document.createElement('td');
+        title.innerText = bankHolNames[i];
+        tableBody.childNodes[rowIndex].append(title);
+        // Add date to global array for calculations
+        nonProcessingDays.push(convertGovDateToObject(dates[i]));
+        rowIndex++;
     }
-    console.log(`Display bank hols: ${nonProcessingDays[2]}`)
 }
 
 // Converts dates returned from Gov API (format YYYY-MM-DD) to UK display format (DD/MM/YYYY)

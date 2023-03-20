@@ -45,7 +45,7 @@ section {
     margin-inline: auto;
 }
 
-#nonProcessingDates-display {
+#bankHolsWeekends-display, #nonProcessingDates-display {
     display: none;
 }
 
