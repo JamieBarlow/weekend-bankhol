@@ -19,8 +19,8 @@
         <h1>Direct Debit Processing Calendar</h1>
     </header>
     <main class="main">
-        <section class="dates-form container border border-2 rounded-5 p-3 mb-4">
-            <form id="extra-dates" class="mb-3">
+        <section class="extra-dates container border border-2 rounded-5 p-3 mb-4">
+            <form id="extra-dates__form" class="mb-3">
                 <div class="row mb-3">
                     <div class="col">
                         <label for="company-dates" class="form-label">Please enter any extra company holiday dates (e.g.
@@ -36,7 +36,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </form>
-            <form action="#" method="GET" id="getDates">
+            <form action="#" method="GET" id="chooseYear">
                 <label for="year-select">Choose a year:</label>
                 <div class="row mb-3">
                     <div class="col-sm-3">
@@ -57,11 +57,15 @@
                 </div>
             </form>
         </section>
-        <div id="company-dates-display" class="container">
-            
-        </div>
-        <div id="nonProcessingDates-display" class="container"></div>
-        <div id="processingDays" class="container"></div>
+        <section id="company-dates-display" class="container">
+            <table class="table, table-primary, table-striped, table-hover">
+            </table>
+        </section>
+        <section id="bankHolsWeekends-display" class="container">
+            <table class="table, table-primary, table-striped, table-hover">
+            </table>
+        </section>
+        <section id="processingDays" class="container"></section>
         <div id="mocha"></div>
     </main>
     <!-- <script src="scripts/require.js"></script> -->

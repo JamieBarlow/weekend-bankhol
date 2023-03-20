@@ -1,10 +1,12 @@
-const extraDatesForm = document.querySelector('#extra-dates');
-const userInput = document.querySelector('#company-dates');
-const extraDatesDisplay = document.querySelector('#company-dates-display');
-const button = document.querySelector('#getDates');
-const results = document.querySelector('#nonProcessingDates-display')
-const processingDays = document.querySelector('#processingDays');
+const extraDatesForm = document.querySelector('#extra-dates__form');
+const extraDates = document.querySelector('#company-dates');
+const chooseYear = document.querySelector('#chooseYear');
 let year = document.querySelector('#year-select');
+
+const companyDatesDisplay = document.querySelector('#company-dates-display');
+const bankHolsWeekends = document.querySelector('#bankHolsWeekends-display')
+const processingDays = document.querySelector('#processingDays');
+
 let nonProcessingDays = [];
 
 function getBankHols() {
@@ -34,7 +36,7 @@ const displayBankHols = (thisYear) => {
     const header = document.createElement('h2');
     header.innerText = `Bank holiday dates for ${year} (and late ${year - 1})`;
     const list = document.createElement('ul');
-    results.append(header, list);
+    bankHolsWeekends.append(header, list);
     for (let date of thisYear) {
         const listItem = document.createElement('li');
         let ukDate = convertGovDateToDMY(date);
@@ -107,7 +109,7 @@ const displayWeekends = (weekends) => {
     const header = document.createElement('h2');
     header.innerText = `Weekend dates for ${year} (including late ${year - 1} and early ${Number(year) + 1})`;
     const list = document.createElement('ul');
-    results.append(header, list);
+    bankHolsWeekends.append(header, list);
     for (let date of weekends) {
         const listItem = document.createElement('li');
         listItem.innerText = date;
@@ -194,7 +196,7 @@ const displayProcessingDays = () => {
         return newDates;
     }
 
-    // Use to compare dates with nonProcessing days and return the next (or previous) working day, depending on the direction specified. Populates a given table column with results
+    // Use to compare dates with nonProcessing days and return the next (or previous) working day, depending on the direction specified. Populates a given table column with bankHolsWeekends
     function compareDates(dates1, dates2, direction, column) {
         let resultDates = [];
         let defaultDate = true;
@@ -285,14 +287,14 @@ year.addEventListener('change', function () {
     year = year.value;
 });
 
-button.addEventListener('submit', function (e) {
+chooseYear.addEventListener('submit', function (e) {
     e.preventDefault();
     getBankHols();
-    reveal(extraDatesDisplay);
-    reveal(results);
+    reveal(companyDatesDisplay);
+    reveal(bankHolsWeekends);
 });
 
-// Displays results for a given element
+// Displays bankHolsWeekends for a given element
 function reveal(section) {
     section.style.display = "block";
 }
@@ -306,7 +308,7 @@ let displayCompanyHolsHeader = (function() {
             const header = document.createElement('h2');
             header.innerText = `Company holiday dates:`;
             const list = document.createElement('ul');
-            extraDatesDisplay.append(header, list);
+            companyDatesDisplay.append(header, list);
         }
     }
 })();
@@ -321,7 +323,7 @@ const displayCompanyHols = (date) => {
     newItem.innerText = `${convertJSDateToDMY(date)}`;
     newItem.style.display = "inline";
     deleteButton.innerText = " - ";
-    extraDatesDisplay.append(newItem, deleteButton, breakLine);
+    companyDatesDisplay.append(newItem, deleteButton, breakLine);
     console.log(date);
     console.log(nonProcessingDays);
 }
@@ -329,13 +331,13 @@ const displayCompanyHols = (date) => {
 // Add extra date items to list on submission
 extraDatesForm.addEventListener("submit", function(e) {
     e.preventDefault();
-    let newDate = new Date(`${userInput.value}`);
+    let newDate = new Date(`${extraDates.value}`);
     nonProcessingDays.push(newDate);
     displayCompanyHols(newDate);
 })
 
-// Clicking on ' - ' button to remove list item
-extraDatesDisplay.addEventListener('click', function(e) {
+// Clicking on ' - ' chooseYear to remove list item
+companyDatesDisplay.addEventListener('click', function(e) {
     if (e.target.nodeName === "BUTTON") {
         e.target.previousElementSibling.remove();
         e.target.nextElementSibling.remove();
@@ -347,10 +349,10 @@ extraDatesDisplay.addEventListener('click', function(e) {
 // Exporting variables and functions
 const variables = {
     extraDatesForm,
-    userInput,
-    extraDatesDisplay,
-    button,
-    results,
+    extraDates,
+    companyDatesDisplay,
+    chooseYear,
+    bankHolsWeekends,
     processingDays,
     year,
     nonProcessingDays

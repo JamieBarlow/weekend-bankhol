@@ -45,7 +45,7 @@ section {
     margin-inline: auto;
 }
 
-#company-dates-display, #nonProcessingDates-display {
+#nonProcessingDates-display {
     display: none;
 }
 
