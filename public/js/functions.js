@@ -151,7 +151,7 @@ const displayProcessingDays = () => {
     table.rows[1].cells[7].innerText = "Step 6 - 2 working days after the payment date";
     
     table.rows[0].classList.add('table-dark')
-    table.rows[1].classList.add('table-info')
+    table.rows[1].classList.add('table-info', 'table-group-divider', 'border-dark')
     
 
     // Column A dates
@@ -288,7 +288,14 @@ year.addEventListener('change', function () {
 button.addEventListener('submit', function (e) {
     e.preventDefault();
     getBankHols();
+    reveal(extraDatesDisplay);
+    reveal(results);
 });
+
+// Displays results for a given element
+function reveal(section) {
+    section.style.display = "block";
+}
 
 // Runs only once to generate header
 let displayCompanyHolsHeader = (function() {

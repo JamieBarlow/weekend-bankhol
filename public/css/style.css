@@ -45,6 +45,10 @@ section {
     margin-inline: auto;
 }
 
+#company-dates-display, #nonProcessingDates-display {
+    display: none;
+}
+
 
 /* 
 table {
@@ -52,9 +56,9 @@ table {
     text-align: center;
 }
 
-tr>:nth-child(1) {
+ tr>:nth-child(1) {
     background: #d1e7dd;
-}
+} 
 
 tr, td {
     width: 100px;

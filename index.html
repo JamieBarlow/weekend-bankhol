@@ -18,18 +18,18 @@
     <header class="header wrapper p-3 text-center">
         <h1>Direct Debit Processing Calendar</h1>
     </header>
-    <main class="container border border-2 rounded-5 p-3 mb-4">
-        <section class="dates-form wrapper">
+    <main class="main">
+        <section class="dates-form container border border-2 rounded-5 p-3 mb-4">
             <form id="extra-dates" class="mb-3">
                 <div class="row mb-3">
-                    <div class="col-sm-8">
+                    <div class="col">
                         <label for="company-dates" class="form-label">Please enter any extra company holiday dates (e.g.
                             Christmas office closure dates) in this field and click 'Add.' Include holidays for both the
                             current
                             year <em>and</em> the previous year. Please enter in DD/MM/YYYY format and click 'Add' after
                             each
                             entry:</label>
-                        <div class="col-sm-3">
+                        <div class="col-4">
                             <input type="date" class="form-control" id="company-dates" required>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                 <label for="year-select">Choose a year:</label>
                 <div class="row mb-3">
                     <div class="col-sm-3">
-                        <select class="form-select w-75" aria-label="year select" name="year" id="year-select">
+                        <select class="form-select" aria-label="year select" name="year" id="year-select">
                             <option selected>Select a year</option>
                             <option value="2017">2017</option>
                             <option value="2018">2018</option>
@@ -53,13 +53,15 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-sm-3"><button class="btn btn-primary">Give me dates</button></div>
+                    <div class="col-4"><button class="btn btn-primary dates-submit">Give me dates</button></div>
                 </div>
             </form>
         </section>
-        <div id="company-dates-display" class="wrapper"></div>
-        <div id="nonProcessingDates-display" class="wrapper"></div>
-        <div id="processingDays" class="wrapper"></div>
+        <div id="company-dates-display" class="container">
+            
+        </div>
+        <div id="nonProcessingDates-display" class="container"></div>
+        <div id="processingDays" class="container"></div>
         <div id="mocha"></div>
     </main>
     <!-- <script src="scripts/require.js"></script> -->
