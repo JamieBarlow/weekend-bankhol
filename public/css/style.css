@@ -45,8 +45,16 @@ section {
     margin-inline: auto;
 }
 
+.accordion-body {
+    padding: 5px;
+}
+
 #bankHols-display, #weekends-display {
     display: none;
+}
+
+.accordion-item {
+    background: var(--background);
 }
 
 

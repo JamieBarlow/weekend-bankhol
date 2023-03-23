@@ -36,6 +36,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </form>
+            
             <form action="#" method="GET" id="chooseYear">
                 <label for="year-select">Choose a year:</label>
                 <div class="row mb-3">
@@ -76,22 +77,36 @@
             </table>
         </section>
         <section id="weekends-display" class="container">
-            <table id="weekendsTable" class="table table-success table-striped table-hover">
-                <thead>
-                    <tr class="table__header table-dark">
-                        <th scope="col">Date</th>
-                        <th scope="col">Day of the week</th>
-                    </tr>
-                </thead>
-                <tbody id="weekendsTable__body">
-                    
-                </tbody>
-            </table>
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                      Show / Hide dates
+                    </button>
+                  </h2>
+                  <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                    <div class="accordion-body">
+                        <table id="weekendsTable" class="table table-success table-striped table-hover">
+                            <thead>
+                                <tr class="table__header table-dark">
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Day of the week</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weekendsTable__body">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
         </section>
         <section id="processingDays" class="container"></section>
         <div id="mocha"></div>
     </main>
     <!-- <script src="scripts/require.js"></script> -->
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="public/js/functions.js" type="module"></script>
     <script src="node_modules/chai/chai.js"></script>
     <script src="node_modules/mocha/mocha.js"></script>
