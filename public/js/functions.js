@@ -13,6 +13,10 @@ const processingDays = document.querySelector('#processingDays');
 
 let nonProcessingDays = [];
 
+// Enable tooltips
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
 function getBankHols() {
     fetch(`https://www.gov.uk/bank-holidays.json`)
         .then(res => {

@@ -46,17 +46,39 @@ section {
 }
 
 .accordion-body {
-    padding: 5px;
+    padding: 0px;
 }
 
 #bankHols-display, #weekends-display {
     display: none;
 }
 
+.table {
+    margin: 0;
+}
+
 .accordion-item {
     background: var(--background);
 }
 
+.tooltip--standard {
+    --bs-tooltip-bg: black;
+    --bs-tooltip-color: var(--bs-light);
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+
+/* Tooltip question icon */
+.fa-solid {
+    color: var(--bs-warning);
+}
+
+.extra-dates {
+    background: var(--bs-dark);
+}
 
 /* 
 table {
