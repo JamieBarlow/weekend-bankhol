@@ -61,8 +61,8 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-4"><a href="#" data-bs-custom-class="custom-tooltip" data-bs-toggle="tooltip"
-                            data-bs-title="Make sure you have added company dates"
+                    <div class="col-4"><a href="#" data-bs-custom-class="tooltip--warning" data-bs-toggle="tooltip"
+                            data-bs-title="Make sure you have added company dates first"
                             data-bs-placement="right"><button class="btn btn-primary dates-submit">Calculate
                                 dates</button></a></div>
                 </div>
@@ -115,7 +115,10 @@
                 </div>
             </div>
         </section>
-        <section id="processingDays" class="container"></section>
+        <section id="processingDays" class="container">
+            <button id="copyTable" class="btn btn-success" href="#" data-bs-toggle="tooltip"
+            data-bs-title="Copy to clipboard">Copy table<i class="fa-regular fa-clipboard ps-2"></i></button>
+        </section>
         <div id="mocha"></div>
     </main>
     <!-- <script src="scripts/require.js"></script> -->

@@ -10,6 +10,8 @@ const weekends = document.querySelector('#weekends-display');
 const bankHolsTable = document.querySelector('#bankHolsTable');
 const weekendsTable = document.querySelector('#weekendsTable');
 const processingDays = document.querySelector('#processingDays');
+const copyTable = document.querySelector('#copyTable');
+let resultsTable;
 
 let nonProcessingDays = [];
 
@@ -170,6 +172,9 @@ const displayProcessingDays = () => {
     // Displaytable
     const table = document.createElement('table');
     table.classList.add('table', 'table-primary', 'table-striped', 'table-hover');
+    table.id = 'resultsTable';
+    resultsTable = table;
+
     for (let i = 0; i < 26; i++) {
         const tr = table.insertRow();
         for (let j = 0; j < 8; j++) {
@@ -320,9 +325,7 @@ const displayProcessingDays = () => {
     // console.log(`Non processing days: ${nonProcessingDays}`);
     // console.log(`Display processing days: ${nonProcessingDays[3]}`)
     processingDays.append(header, table);
-
 }
-
 
 
 year.addEventListener('change', function () {
@@ -387,6 +390,27 @@ companyDatesDisplay.addEventListener('click', function(e) {
         e.target.remove();
     }
 })
+
+// Utility function, allows any element passed in to be selected when function is triggered
+function selectElement(el) {
+    let range = document.createRange();
+    let selection = window.getSelection();
+    selection.removeAllRanges();
+    range.selectNodeContents(el);
+    selection.addRange(range);
+}
+
+function copyElement(el) {
+    const type = "text/plain";
+    const blob = new Blob([el.innerText], { type });
+    const data = [new ClipboardItem({ [type]: blob })];
+    navigator.clipboard.write(data);
+}
+
+// Select all in table and copy
+copyTable.addEventListener('click', function() {
+    copyElement(resultsTable);
+});
 
 
 // Exporting variables and functions

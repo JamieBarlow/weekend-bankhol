@@ -62,8 +62,13 @@ section {
 }
 
 .tooltip--standard {
-    --bs-tooltip-bg: black;
+    --bs-tooltip-bg: var(--bs-primary);
     --bs-tooltip-color: var(--bs-light);
+}
+
+.tooltip--warning {
+    --bs-tooltip-bg: var(--bs-warning);
+    --bs-tooltip-color: var(--bs-dark);
 }
 
 .tooltip.show {
@@ -78,6 +83,10 @@ section {
 
 .extra-dates {
     background: var(--bs-dark);
+}
+
+.selectable {
+    
 }
 
 /* 
