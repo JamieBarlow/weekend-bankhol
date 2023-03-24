@@ -10,7 +10,7 @@ const weekends = document.querySelector('#weekends-display');
 const bankHolsTable = document.querySelector('#bankHolsTable');
 const weekendsTable = document.querySelector('#weekendsTable');
 const processingDays = document.querySelector('#processingDays');
-const copyTable = document.querySelector('#copyTable');
+const copyButton = document.querySelector('#copyButton');
 let resultsTable;
 
 let nonProcessingDays = [];
@@ -178,7 +178,7 @@ const displayProcessingDays = () => {
     for (let i = 0; i < 26; i++) {
         const tr = table.insertRow();
         for (let j = 0; j < 8; j++) {
-            const td = tr.insertCell();
+            tr.insertCell();
         }
     }
     // Populate table top 2 rows
@@ -408,8 +408,16 @@ function copyElement(el) {
 }
 
 // Select all in table and copy
-copyTable.addEventListener('click', function() {
+copyButton.addEventListener('click', function() {
     copyElement(resultsTable);
+    const tooltip = bootstrap.Tooltip.getInstance(copyButton);
+    tooltip.setContent({ '.tooltip-inner': 'Copied!' })
+    setTimeout(() => {
+        tooltip.hide();
+        tooltip.setContent({ '.tooltip-inner': 'Copy to clipboard' })
+    }, 1000)
+    // btn_tooltip.show();
+    // copyButton.setAttribute('data-bs-original-title', 'Copied!');
 });
 
 
