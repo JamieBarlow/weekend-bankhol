@@ -364,11 +364,13 @@ const displayCompanyHols = (date) => {
     // Creates new list items
     const newItem = document.createElement('li');
     const deleteButton = document.createElement('button');
+    deleteButton.classList.add('btn', 'btn-outline-info');
     const breakLine = document.createElement('br');
     newItem.innerText = `${convertJSDateToDMY(date)}`;
     newItem.style.display = "inline";
-    deleteButton.innerText = " - ";
+    deleteButton.innerHTML = '<i class="fa-solid fa-square-minus"></i>';
     companyDatesDisplay.append(newItem, deleteButton, breakLine);
+    deleteButton.appendChild(deleteIcon);
     console.log(date);
     console.log(nonProcessingDays);
 }

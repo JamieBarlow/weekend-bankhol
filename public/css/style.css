@@ -50,11 +50,19 @@ section {
 }
 
 #results {
-    /* display: none; */
+    display: none;
 }
 
 #copyButton {
 
+}
+
+button {
+    margin: 10px;
+}
+
+.form-button {
+    margin-left: 0;
 }
 
 .table {
@@ -82,16 +90,14 @@ section {
 
 /* Tooltip question icon */
 .fa-solid {
-    color: var(--bs-warning);
+    color: var(--bs-standard);
 }
 
 .extra-dates {
     background: var(--bs-dark);
 }
 
-.selectable {
-    
-}
+
 
 /* 
 table {
