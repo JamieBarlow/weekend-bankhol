@@ -49,8 +49,12 @@ section {
     padding: 0px;
 }
 
-#bankHols-display, #weekends-display {
-    display: none;
+#results {
+    /* display: none; */
+}
+
+#copyButton {
+
 }
 
 .table {

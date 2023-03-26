@@ -11,6 +11,7 @@ const bankHolsTable = document.querySelector('#bankHolsTable');
 const weekendsTable = document.querySelector('#weekendsTable');
 const processingDays = document.querySelector('#processingDays');
 const copyButton = document.querySelector('#copyButton');
+const results = document.querySelector('#results');
 let resultsTable;
 
 let nonProcessingDays = [];
@@ -335,9 +336,7 @@ year.addEventListener('change', function () {
 chooseYear.addEventListener('submit', function (e) {
     e.preventDefault();
     getBankHols();
-    reveal(companyDatesDisplay);
-    reveal(bankHols);
-    reveal(weekends);
+    reveal(results);
 });
 
 // Displays bankHols for a given element
