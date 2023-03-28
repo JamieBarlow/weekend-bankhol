@@ -1,0 +1,88 @@
+html {
+    box-sizing: border-box;
+    font-size: 100%;
+    /* line-height: 1.56; */
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    /* font-size: 18px; */
+    overflow-x: hidden;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+main {
+    /* display: flex;
+    flex-direction: column; */
+}
+
+section {
+    padding: 20px 0;
+}
+
+.wrapper {
+    width: 90%;
+    margin-inline: auto;
+}
+
+.accordion-body {
+    padding: 0px;
+}
+
+#results {
+    display: none;
+}
+
+button {
+    margin: 10px;
+}
+
+.form-button {
+    margin-left: 0;
+}
+
+.table {
+    margin: 0;
+}
+
+.accordion-item {
+    background: var(--background);
+}
+
+.tooltip--standard {
+    --bs-tooltip-bg: var(--bs-primary);
+    --bs-tooltip-color: var(--bs-light);
+}
+
+.tooltip--warning {
+    --bs-tooltip-bg: var(--bs-warning);
+    --bs-tooltip-color: var(--bs-dark);
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+
+/* Tooltip question icon */
+.fa-solid {
+    color: var(--bs-standard);
+}
