@@ -4,6 +4,10 @@ const chooseYear = document.querySelector('#chooseYear');
 let year = document.querySelector('#year-select');
 let namedDaysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
+const bankHolsTab = document.querySelector('#bankHols-tab');
+const weekendsTab = document.querySelector('#weekends-tab');
+const processingTab = document.querySelector('#processing-tab');
+
 const companyDatesDisplay = document.querySelector('#company-dates-display');
 const bankHols = document.querySelector('#bankHols-display');
 const weekends = document.querySelector('#weekends-display');
@@ -338,6 +342,9 @@ chooseYear.addEventListener('submit', function (e) {
     e.preventDefault();
     getBankHols();
     reveal(results);
+    reveal(bankHolsTab);
+    reveal(weekendsTab);
+    reveal(processingTab);
 });
 
 // Displays a given element
@@ -346,10 +353,8 @@ function reveal(section) {
 }
 
 // Hides elements
-function hideTabs(tabs) {
-    for (tab of tabs) {
-        element.style.display = "none";
-    }
+function hideTabs(tab) {
+    tab.style.display = "none";
 }
 
 // Runs only once to generate header
@@ -371,12 +376,9 @@ const displayCompanyHols = (date) => {
     displayCompanyHolsHeader();
     // Keep other results hidden until year selected
     reveal(results);
-    // const bankHolsTab = document.querySelector('#bankHols-tab');
-    // const weekendsTab = document.querySelector('#weekends-tab');
-    // const processingTab = document.querySelector('#processing-tab');
-    // const otherTabs = [];
-    // otherTabs.push(bankHolsTab, weekendsTab, processingTab);
-    // hideTabs(otherTabs);
+    hideTabs(bankHolsTab);
+    hideTabs(weekendsTab);
+    hideTabs(processingTab);
     // Creates new list items
     const newItem = document.createElement('li');
     const deleteButton = document.createElement('button');
