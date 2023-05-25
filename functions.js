@@ -255,16 +255,20 @@ const displayProcessingDays = () => {
         for (let i = 0; i < dates1.length; i++) {
             let newDate = new Date(`${dates1[i]}`);
             for (let j = 0; j < dates2.length; j++) {
+                // comparing first set of dates with nonprocessing days - if they match, the default date can't apply and the date must be shifted forwards or backwards for further comparison
                 if (newDate.getTime() === dates2[j].getTime()) {
                     defaultDate = false;
                     newDate.setDate(`${direction(newDate.getDate())}`);
                     newDate.setHours(0);
+                    // 2nd comparison
                     for (let k = 0; k < dates2.length; k++) {
                         if (newDate.getTime() === dates2[k].getTime()) {
                             newDate.setDate(`${direction(newDate.getDate())}`);
+                            // 3rd comparison
                             for (let l = 0; l < dates2.length; l++) {
                                 if (newDate.getTime() === dates2[l].getTime()) {
                                     newDate.setDate(`${direction(newDate.getDate())}`);
+                                    // 4th comparison (final)
                                     for (let m = 0; m < dates2.length; m++) {
                                         if (newDate.getTime() === dates2[m].getTime()) {
                                             newDate.setDate(`${direction(newDate.getDate())}`);
@@ -274,10 +278,12 @@ const displayProcessingDays = () => {
                             }
                         }
                     }
+                    // Populate rows from 3rd row down, in the column given
                     table.rows[i + 2].cells[column].innerText = convertJSDateToDMY(newDate);
                     resultDates.push(newDate);
                 }
             }
+            // Populate with default date (will apply if there is no clash between column dates and nonprocessing days)
             if (defaultDate === true) {
                 table.rows[i + 2].cells[column].innerText = convertJSDateToDMY(dates1[i]);
                 resultDates.push(dates1[i]);
