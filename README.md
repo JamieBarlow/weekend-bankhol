@@ -36,8 +36,6 @@
 
 - HTML/CSS
 - JavaScript
-- Express.js (web framework)
-- EJS (embedded JavaScript templating)
 - Mocha (JS testing framework) with Chai (testing assertion library)
 - Git Version Control
 
