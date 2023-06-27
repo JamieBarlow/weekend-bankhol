@@ -36,6 +36,7 @@
 
 - HTML/CSS
 - JavaScript
+- BootStrap
 - Mocha (JS testing framework) with Chai (testing assertion library)
 - Git Version Control
 
