@@ -472,4 +472,4 @@ const functions = {
     displayCompanyHols
 }
 
-export { variables, functions }
+export { functions, variables };

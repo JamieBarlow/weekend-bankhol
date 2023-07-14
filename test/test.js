@@ -1,8 +1,6 @@
 // Importing app functions and Mocha assert functionality
-import { variables, functions } from '../public/js/functions.js'
+import { variables, functions } from '../functions.js';
 const assert = chai.assert;
-
-console.log(variables.extraDatesForm);
 
 describe('+', () => {
     it('returns the sum of its arguments', () => {
