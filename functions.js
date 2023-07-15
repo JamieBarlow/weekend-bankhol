@@ -25,7 +25,8 @@ const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 function getBankHols() {
-    fetch(`https://www.gov.uk/bank-holidays.json`)
+    let results, dates;
+    return fetch(`https://www.gov.uk/bank-holidays.json`)
         .then(res => {
             if (res.ok) {
                 console.log("RESOLVED!", res);
@@ -34,8 +35,8 @@ function getBankHols() {
             throw new Error('request failed!');
         }, networkError => console.log(networkError.message))
         .then(data => {
-            const results = (data['england-and-wales'].events);
-            console.log(data['england-and-wales']);
+            results = (data['england-and-wales'].events);
+            console.log(results);
             let nonProcessing = [];
             let thisYearResults = results.filter(result => result.date.slice(0, 4) === year);
             let lastYearResults = results.filter(result => result.date.slice(0, 4) === ((year - 1).toString()));
@@ -43,7 +44,8 @@ function getBankHols() {
             nonProcessing.push(...thisYearResults, ...endOflastYearResults);
 
             // Extract dates from nonProcessing results
-            const dates = nonProcessing.map(result => result.date);
+            dates = nonProcessing.map(result => result.date);
+            
             // Extract day of week from results
             const daysOfWeek = dates.map(result => {
                 let date = new Date(result);
@@ -56,7 +58,14 @@ function getBankHols() {
 
             displayBankHols(dates, daysOfWeek, bankHolNames);
             getWeekends(year);
-        });
+            let resultsObj = {
+                results,
+                dates,
+            }
+            console.log('dates!!', nonProcessing)
+            console.log('results!', resultsObj)
+            return resultsObj;
+        })
 }
 
 const displayBankHols = (dates, daysOfWeek, bankHolNames) => {
@@ -108,10 +117,14 @@ const getWeekends = (year) => {
             weekendDays.push(namedDaysOfWeek[day.getDay()]);
         }
     }
-    
+
     console.log(`Getweekends: ${nonProcessingDays[2]}`)
     // console.log(nonProcessingDays);
     displayWeekends(weekends, weekendDays);
+    return {
+        weekends,
+        weekendDays
+    }
 }
 
 const displayWeekends = (dates, weekendDays) => {
@@ -139,15 +152,32 @@ const displayWeekends = (dates, weekendDays) => {
     displayProcessingDays();
 }
 
+// Tests date is in YYYY-MM-DD format
+const testGovDateFormat = (date) => {
+    const regex = new RegExp('([0-9]+(-[0-9]+)+)');
+    if (!regex.test(date)) {
+        throw Error ('date to be converted must be in format YYYY-MM-DD')
+    }
+}
+
+const testUKDateFormat = (date) => {
+    const regex = new RegExp('([0-9]+(/[0-9]+)+)');
+    if (!regex.test(date)) {
+        throw Error ('date to be converted must be in format DD/MM/YYYY')
+    }
+}
+
 // Converts dates returned from Gov API (format YYYY-MM-DD) to UK display format (DD/MM/YYYY)
 const convertGovDateToDMY = (date) => {
     // console.log(date);
+    testGovDateFormat(date);
     date = `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(0, 4)}`;
     return date;
 }
 
 // Converts dates from Gov API (format YYYY-MM-DD) to a JavaScript Date Object
 const convertGovDateToObject = (date) => {
+    testGovDateFormat(date);
     let dateObject = new Date(date);
     dateObject.setHours(0);
     // console.log(`date object: ${dateObject}`)
@@ -156,6 +186,7 @@ const convertGovDateToObject = (date) => {
 
 // Converts UK format dates (format DD/MM/YYY) to a JavaScript Date Object
 const convertUKDateToObject = (date) => {
+    testUKDateFormat(date);
     let dateObject = new Date(`${date.slice(3, 5)}/${date.slice(0, 2)}/${date.slice(6, 10)}`);
     dateObject.setHours(0);
     return dateObject;
@@ -168,6 +199,29 @@ const convertJSDateToDMY = (date) => {
     let year = date.getFullYear();
     let ukDate = `${day}/${month}/${year}`
     return ukDate;
+}
+
+// Pass the below functions as the 'direction' argument to other functions in order to push days either forwards or backwards;
+function forwards(a) {
+    a++;
+    return a;
+}
+function backwards(a) {
+    a--;
+    return a;
+}
+
+// Shift dates back or forward by 1 day, using 'forwards' or 'backwards' utility functions as the direction argument (use this before comparing with non-processing days)
+function shiftDates(dates, direction) {
+    let newDates = [];
+    // Shift dates back by 1
+    for (let i = 0; i < dates.length; i++) {
+        let newDate = new Date(dates[i]);
+        newDate.setDate(`${direction(newDate.getDate())}`);
+        newDate.setHours(0);
+        newDates.push(newDate);
+    }
+    return newDates;
 }
 
 // Display processing dates
@@ -203,10 +257,10 @@ const displayProcessingDays = () => {
     table.rows[1].cells[5].innerText = "Step 2 - 5th or 19th of the month but must be a working day, if falls on weekend of bank holiday, the payment date will be next working day following the 5th or 19th.";
     table.rows[1].cells[6].innerText = "Step 5 - 1 working day after the payment date";
     table.rows[1].cells[7].innerText = "Step 6 - 2 working days after the payment date";
-    
+
     table.rows[0].classList.add('table-dark')
     table.rows[1].classList.add('table-info', 'table-group-divider', 'border-dark')
-    
+
 
     // Column A dates
     let month = 1;
@@ -223,29 +277,6 @@ const displayProcessingDays = () => {
             claimDates.push(convertUKDateToObject(claimDate));
             month++;
         }
-    }
-
-     // Pass the below functions as the 'direction' argument to other functions in order to push days either forwards or backwards;
-     function forwards(a) {
-        a++;
-        return a;
-    }
-    function backwards(a) {
-        a--;
-        return a;
-    }
-
-    // Shift dates back or forward by 1 day, using 'forwards' or 'backwards' utility functions as the direction argument (use this before comparing with non-processing days)
-    function shiftDates(dates, direction) {
-        let newDates = [];
-        // Shift dates back by 1
-        for (let i = 0; i < dates.length; i++) {
-            let newDate = new Date(dates[i]);
-            newDate.setDate(`${direction(newDate.getDate())}`);
-            newDate.setHours(0);
-            newDates.push(newDate);
-        }
-        return newDates;
     }
 
     // Use to compare dates with nonProcessing days and return the next (or previous) working day, depending on the direction specified. Populates a given table column with bankHols
@@ -364,9 +395,9 @@ function hideTabs(tab) {
 }
 
 // Runs only once to generate header
-let displayCompanyHolsHeader = (function() {
+let displayCompanyHolsHeader = (function () {
     let executed = false;
-    return function() {
+    return function () {
         if (!executed) {
             executed = true;
             const header = document.createElement('h2');
@@ -399,7 +430,7 @@ const displayCompanyHols = (date) => {
 }
 
 // Add extra date items to list on submission
-extraDatesForm.addEventListener("submit", function(e) {
+extraDatesForm.addEventListener("submit", function (e) {
     e.preventDefault();
     let newDate = new Date(`${extraDates.value}`);
     nonProcessingDays.push(newDate);
@@ -407,7 +438,7 @@ extraDatesForm.addEventListener("submit", function(e) {
 })
 
 // Clicking on ' - ' chooseYear to remove list item
-companyDatesDisplay.addEventListener('click', function(e) {
+companyDatesDisplay.addEventListener('click', function (e) {
     if (e.target.nodeName === "BUTTON") {
         e.target.previousElementSibling.remove();
         e.target.nextElementSibling.remove();
@@ -433,7 +464,7 @@ function copyElement(el) {
 }
 
 // Select all in table and copy
-copyButton.addEventListener('click', function() {
+copyButton.addEventListener('click', function () {
     copyElement(resultsTable);
     const tooltip = bootstrap.Tooltip.getInstance(copyButton);
     tooltip.setContent({ '.tooltip-inner': 'Copied!' })
@@ -469,7 +500,10 @@ const functions = {
     displayWeekends,
     displayProcessingDays,
     displayCompanyHolsHeader,
-    displayCompanyHols
+    displayCompanyHols,
+    forwards,
+    backwards,
+    shiftDates
 }
 
 export { functions, variables };
