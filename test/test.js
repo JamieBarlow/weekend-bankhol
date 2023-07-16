@@ -1,5 +1,6 @@
 // Importing app functions and Mocha assert functionality
 import { variables, functions } from '../functions.js';
+import { year2022 } from '../mockData.js';
 const assert = chai.assert;
 
 describe('+', () => {
@@ -14,10 +15,10 @@ describe('getBankHols', () => {
         console.log('actual!!', actual)
         assert.isNotEmpty(actual.results);
     }),
-    it('returns dates', async () => {
-        const actual = await functions.getBankHols();
-        assert.isNotEmpty(actual.dates);
-    })
+        it('returns dates', async () => {
+            const actual = await functions.getBankHols();
+            assert.isNotEmpty(actual.dates);
+        })
 })
 
 describe('getWeekends', () => {
@@ -26,11 +27,11 @@ describe('getWeekends', () => {
         const actual = functions.getWeekends(input);
         assert.isNotEmpty(actual.weekends)
     }),
-    it('returns an array of days for the weekend dates provided', () => {
-        const input = 2022;
-        const actual = functions.getWeekends(input);
-        assert.isNotEmpty(actual.weekendDays)
-    })
+        it('returns an array of days for the weekend dates provided', () => {
+            const input = 2022;
+            const actual = functions.getWeekends(input);
+            assert.isNotEmpty(actual.weekendDays)
+        })
 })
 
 describe('convertGovDateToDMY', () => {
@@ -40,12 +41,12 @@ describe('convertGovDateToDMY', () => {
         const actual = functions.convertGovDateToDMY(input);
         assert.strictEqual(actual, expected);
     }),
-    it('throws an error if the date input is not in format YYYY-MM-DD', () => {
-        const input = '01/06/2022';
-        assert.throws(() => {
-            functions.convertGovDateToDMY(input)
-        }, /date to be converted must be in format YYYY-MM-DD/);
-    })
+        it('throws an error if the date input is not in format YYYY-MM-DD', () => {
+            const input = '01/06/2022';
+            assert.throws(() => {
+                functions.convertGovDateToDMY(input)
+            }, /date to be converted must be in format YYYY-MM-DD/);
+        })
 })
 
 describe('convertGovDateToObject', () => {
@@ -54,12 +55,12 @@ describe('convertGovDateToObject', () => {
         const actual = functions.convertGovDateToObject('2022-01-01');
         assert.deepEqual(actual, expected)
     }),
-    it('throws an error if the date input is not in format YYYY-MM-DD', () => {
-        const input = '01/06/2022';
-        assert.throws(() => {
-            functions.convertGovDateToObject(input)
-        }, 'date to be converted must be in format YYYY-MM-DD')
-    })
+        it('throws an error if the date input is not in format YYYY-MM-DD', () => {
+            const input = '01/06/2022';
+            assert.throws(() => {
+                functions.convertGovDateToObject(input)
+            }, 'date to be converted must be in format YYYY-MM-DD')
+        })
 })
 
 describe('convertUKDateToObject', () => {
@@ -68,12 +69,12 @@ describe('convertUKDateToObject', () => {
         const actual = functions.convertUKDateToObject('01/01/2022');
         assert.deepEqual(actual, expected);
     }),
-    it('throws an error if the date input is not in format DD/MM/YYYY', () => {
-        const input = '2022-06-01';
-        assert.throws(() => {
-            functions.convertUKDateToObject(input)
-        }, 'date to be converted must be in format DD/MM/YYYY')
-    })
+        it('throws an error if the date input is not in format DD/MM/YYYY', () => {
+            const input = '2022-06-01';
+            assert.throws(() => {
+                functions.convertUKDateToObject(input)
+            }, 'date to be converted must be in format DD/MM/YYYY')
+        })
 })
 
 describe('convertJSDateToDMY', () => {
@@ -92,27 +93,33 @@ describe('shiftDates', () => {
         const actual = functions.shiftDates(input, direction);
         assert.deepEqual(actual, expected)
     }),
-    it('Shifts dates forwards by 1 day', () => {
-        const input = [new Date('June 1, 2022')];
-        let direction = functions.forwards;
-        const expected = [new Date('June 2, 2022')];
-        const actual = functions.shiftDates(input, direction);
-        assert.deepEqual(actual, expected)
-    }),
-    it('Can shift dates backwards by 1 day', () => {
-        const input = [new Date('June 1, 2022')];
-        let direction = functions.backwards;
-        const expected = [new Date('May 31, 2022')];
-        const actual = functions.shiftDates(input, direction);
-        assert.deepEqual(actual, expected)
-    })
+        it('Shifts dates forwards by 1 day', () => {
+            const input = [new Date('June 1, 2022')];
+            let direction = functions.forwards;
+            const expected = [new Date('June 2, 2022')];
+            const actual = functions.shiftDates(input, direction);
+            assert.deepEqual(actual, expected)
+        }),
+        it('Can shift dates backwards by 1 day', () => {
+            const input = [new Date('June 1, 2022')];
+            let direction = functions.backwards;
+            const expected = [new Date('May 31, 2022')];
+            const actual = functions.shiftDates(input, direction);
+            assert.deepEqual(actual, expected)
+        })
 })
 
 describe('app E2E test', () => {
-    it('should match the default results for nonProcessing days in 2022', () => {
-        year = 2022;
-        const actual = functions.getBankHols();
-    })
-})
+    it('should match the default results for nonProcessing days in 2022', async () => {
+      const year = '2022';
+      const expected = year2022;
+      const appOutput = await functions.getBankHols(year);
+      const actual = appOutput;
+      console.table('EXPECTED:', expected);
+      console.table('ACTUAL:', actual);
+      assert.deepEqual(expected, actual);
+    });
+  });
+  
 
 // To run tests in the browser, use mocha.run() in the console

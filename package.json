@@ -12,8 +12,8 @@
     "bootstrap": "^5.3.0-alpha1"
   },
   "devDependencies": {
-    "chai": "*",
-    "mocha": "*"
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
   },
   "type": "module"
 }
