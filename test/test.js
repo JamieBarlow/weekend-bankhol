@@ -110,16 +110,16 @@ describe('shiftDates', () => {
 })
 
 describe('app E2E test', () => {
-    it('should match the default results for nonProcessing days in 2022', async () => {
-      const year = '2022';
-      const expected = year2022;
-      const appOutput = await functions.getBankHols(year);
-      const actual = appOutput;
-      console.table('EXPECTED:', expected);
-      console.table('ACTUAL:', actual);
-      assert.deepEqual(expected, actual);
+    it('should match the default results for nonProcessing days in 2022 (run app first with 2022 chosen and no extra company holiday dates)', async () => {
+        const year = '2022';
+        const expected = year2022;
+        const appOutput = await functions.getBankHols(year);
+        const actual = appOutput;
+        console.table('EXPECTED:', expected);
+        console.table('ACTUAL:', actual);
+        assert.deepEqual(expected, actual);
     });
-  });
-  
+});
+
 
 // To run tests in the browser, use mocha.run() in the console
