@@ -362,6 +362,10 @@ const displayProcessingDays = () => {
     compareDates(colH, nonProcessingDays, forwards, 7);
     colH = compareDates(colH, nonProcessingDays, forwards, 7);
 
+    // Column A dates
+    let colA = claimDates;
+
+    console.log('COLUMN DATA:', colA, colB, colC, colD, colE, colF, colG, colH)
 
     // console.log(`Claim dates: ${claimDates}`);
     // console.log(`Non processing days: ${nonProcessingDays}`);
@@ -382,6 +386,8 @@ chooseYear.addEventListener('submit', function (e) {
     reveal(bankHolsTab);
     reveal(weekendsTab);
     reveal(processingTab);
+    console.log('nonProcessingDays:', nonProcessingDays);
+    console.log('processingDays:', processingDays);
 });
 
 // Displays a given element
