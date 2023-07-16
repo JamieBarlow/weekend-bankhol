@@ -1,7 +1,7 @@
 const extraDatesForm = document.querySelector('#extra-dates__form');
 const extraDates = document.querySelector('#company-dates');
 const chooseYear = document.querySelector('#chooseYear');
-let year = document.querySelector('#year-select');
+let yearSelected = document.querySelector('#year-select');
 let namedDaysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 const bankHolsTab = document.querySelector('#bankHols-tab');
@@ -17,6 +17,7 @@ const processingDays = document.querySelector('#processingDays');
 const copyButton = document.querySelector('#copyButton');
 const results = document.querySelector('#results');
 let resultsTable;
+let processingDaysObj = {};
 
 let nonProcessingDays = [];
 
@@ -24,7 +25,7 @@ let nonProcessingDays = [];
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-function getBankHols() {
+function getBankHols(year) {
     let results, dates;
     return fetch(`https://www.gov.uk/bank-holidays.json`)
         .then(res => {
@@ -45,7 +46,7 @@ function getBankHols() {
 
             // Extract dates from nonProcessing results
             dates = nonProcessing.map(result => result.date);
-            
+
             // Extract day of week from results
             const daysOfWeek = dates.map(result => {
                 let date = new Date(result);
@@ -56,21 +57,29 @@ function getBankHols() {
             // Extract Bank Holiday name from results
             const bankHolNames = nonProcessing.map(result => result.title);
 
-            displayBankHols(dates, daysOfWeek, bankHolNames);
-            getWeekends(year);
-            let resultsObj = {
-                results,
-                dates,
-            }
-            console.log('dates!!', nonProcessing)
-            console.log('results!', resultsObj)
-            return resultsObj;
+            return Promise.all([
+                displayBankHols(dates, daysOfWeek, bankHolNames),
+                getWeekends(year)
+            ]).then(() => {
+                let resultsObj = {
+                    results,
+                    dates,
+                    daysOfWeek
+                };
+                console.log('dates!!', dates)
+                console.log('results!', resultsObj)
+                console.log('daysOfWeek!!', daysOfWeek)
+                console.log('APPOUTPUT:', processingDaysObj);
+                let appOutput = processingDaysObj;
+                return appOutput;
+                // return processingDaysObj;
+            })
         })
 }
 
 const displayBankHols = (dates, daysOfWeek, bankHolNames) => {
     const header = document.createElement('h2');
-    header.innerText = `Bank holiday dates for ${year} (and late ${year - 1})`;
+    header.innerText = `Bank holiday dates for ${yearSelected} (and late ${yearSelected - 1})`;
     bankHols.prepend(header);
     const tableBody = document.querySelector('#bankHolTable__body');
     let rowIndex = 1;
@@ -130,7 +139,7 @@ const getWeekends = (year) => {
 const displayWeekends = (dates, weekendDays) => {
     // console.log(weekends);
     const header = document.createElement('h2');
-    header.innerText = `Weekend dates for ${year} (including late ${year - 1} and early ${Number(year) + 1})`;
+    header.innerText = `Weekend dates for ${yearSelected} (including late ${yearSelected - 1} and early ${Number(yearSelected) + 1})`;
     weekends.prepend(header);
     const tableBody = document.querySelector('#weekendsTable__body');
     let rowIndex = 1;
@@ -156,14 +165,14 @@ const displayWeekends = (dates, weekendDays) => {
 const testGovDateFormat = (date) => {
     const regex = new RegExp('([0-9]+(-[0-9]+)+)');
     if (!regex.test(date)) {
-        throw Error ('date to be converted must be in format YYYY-MM-DD')
+        throw Error('date to be converted must be in format YYYY-MM-DD')
     }
 }
 
 const testUKDateFormat = (date) => {
     const regex = new RegExp('([0-9]+(/[0-9]+)+)');
     if (!regex.test(date)) {
-        throw Error ('date to be converted must be in format DD/MM/YYYY')
+        throw Error('date to be converted must be in format DD/MM/YYYY')
     }
 }
 
@@ -267,12 +276,12 @@ const displayProcessingDays = () => {
     let claimDates = [];
     for (let i = 2; i < table.rows.length; i++) {
         if (i % 2 === 0) {
-            let claimDate = `05/${month.toLocaleString('en-US', { minimumIntegerDigits: 2 })}/${year}`;
+            let claimDate = `05/${month.toLocaleString('en-US', { minimumIntegerDigits: 2 })}/${yearSelected}`;
             table.rows[i].cells[0].innerText = claimDate;
             claimDates.push(convertUKDateToObject(claimDate));
 
         } else if (i % 2 === 1) {
-            let claimDate = `19/${month.toLocaleString('en-US', { minimumIntegerDigits: 2 })}/${year}`;
+            let claimDate = `19/${month.toLocaleString('en-US', { minimumIntegerDigits: 2 })}/${yearSelected}`;
             table.rows[i].cells[0].innerText = claimDate;
             claimDates.push(convertUKDateToObject(claimDate));
             month++;
@@ -367,21 +376,34 @@ const displayProcessingDays = () => {
 
     console.log('COLUMN DATA:', colA, colB, colC, colD, colE, colF, colG, colH)
 
+
     // console.log(`Claim dates: ${claimDates}`);
     // console.log(`Non processing days: ${nonProcessingDays}`);
     // console.log(`Display processing days: ${nonProcessingDays[3]}`)
     processingDays.append(header, table);
+    processingDaysObj = {
+        colA,
+        colB,
+        colC,
+        colD,
+        colE,
+        colF,
+        colG,
+        colH
+    }
+    console.log('processingDaysObj:', processingDaysObj)
+    return processingDaysObj;
 }
 
 // Update year values for calculations
-year.addEventListener('change', function () {
-    year = year.value;
+yearSelected.addEventListener('change', function () {
+    yearSelected = yearSelected.value;
 });
 
 // Trigger on clicking 'calculate dates' button
 chooseYear.addEventListener('submit', function (e) {
     e.preventDefault();
-    getBankHols();
+    getBankHols(yearSelected);
     reveal(results);
     reveal(bankHolsTab);
     reveal(weekendsTab);
@@ -491,8 +513,9 @@ const variables = {
     chooseYear,
     bankHols,
     processingDays,
-    year,
-    nonProcessingDays
+    yearSelected,
+    nonProcessingDays,
+    processingDaysObj
 }
 
 const functions = {
