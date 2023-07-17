@@ -1,6 +1,6 @@
 // Importing app functions and Mocha assert functionality
 import { variables, functions } from '../functions.js';
-import { year2022 } from '../mockData.js';
+import { year2020, year2021, year2022, year2023 } from '../mockData.js';
 const assert = chai.assert;
 
 describe('+', () => {
@@ -110,24 +110,21 @@ describe('shiftDates', () => {
 })
 
 describe('app E2E test', () => {
-    it('should match the default results for nonProcessing days in 2022 (run app first with 2022 chosen and no extra company holiday dates)', async () => {
-        const year = '2022';
-        const expected = year2022;
+    it('should match the default results for nonProcessing days in the year chosen (run app first with a year chosen and no extra company holiday dates)', async () => {
+        const year = variables.yearSelected.value;
+        const data = {
+            year2020,
+            year2021,
+            year2022,
+            year2023
+        }
+        const expected = data[`year${year}`];
         const appOutput = await functions.getBankHols(year);
         const actual = appOutput;
         console.table('EXPECTED:', expected);
         console.table('ACTUAL:', actual);
         assert.deepEqual(expected, actual);
-    }),
-    it('should match the default results for nonProcessing days in 2023 (run app first with 2023 chosen and no extra company holiday dates)', async () => {
-        const year = '2023';
-        const expected = year2023;
-        const appOutput = await functions.getBankHols(year);
-        const actual = appOutput;
-        console.table('EXPECTED:', expected);
-        console.table('ACTUAL:', actual);
-        assert.deepEqual(expected, actual);
-    });
+    })
 });
 
 
