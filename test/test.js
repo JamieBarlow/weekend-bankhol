@@ -118,6 +118,15 @@ describe('app E2E test', () => {
         console.table('EXPECTED:', expected);
         console.table('ACTUAL:', actual);
         assert.deepEqual(expected, actual);
+    }),
+    it('should match the default results for nonProcessing days in 2023 (run app first with 2023 chosen and no extra company holiday dates)', async () => {
+        const year = '2023';
+        const expected = year2023;
+        const appOutput = await functions.getBankHols(year);
+        const actual = appOutput;
+        console.table('EXPECTED:', expected);
+        console.table('ACTUAL:', actual);
+        assert.deepEqual(expected, actual);
     });
 });
 
