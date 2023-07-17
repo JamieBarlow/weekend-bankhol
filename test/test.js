@@ -110,7 +110,9 @@ describe('shiftDates', () => {
 })
 
 describe('app E2E test', () => {
-    it('should match the default results for nonProcessing days in the year chosen (run app first with a year chosen and no extra company holiday dates)', async () => {
+    console.log('YEARNUMBER:')
+    console.log()
+    it('should match the default results for nonProcessing days in a previous year, as chosen (run app first with a year chosen and no extra company holiday dates)', async () => {
         const year = variables.yearSelected.value;
         const data = {
             year2020,
