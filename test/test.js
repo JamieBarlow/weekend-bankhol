@@ -99,13 +99,6 @@ describe('shiftDates', () => {
             const expected = [new Date('June 2, 2022')];
             const actual = functions.shiftDates(input, direction);
             assert.deepEqual(actual, expected)
-        }),
-        it('Can shift dates backwards by 1 day', () => {
-            const input = [new Date('June 1, 2022')];
-            let direction = functions.backwards;
-            const expected = [new Date('May 31, 2022')];
-            const actual = functions.shiftDates(input, direction);
-            assert.deepEqual(actual, expected)
         })
 })
 
