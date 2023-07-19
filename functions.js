@@ -71,6 +71,7 @@ function getBankHols(year) {
                 console.log('daysOfWeek!!', daysOfWeek)
                 console.log('APPOUTPUT:', processingDaysObj);
                 let appOutput = processingDaysObj;
+                console.log('NONPROCESSINGDAYS:', nonProcessingDays);
                 return appOutput;
                 // return processingDaysObj;
             })
@@ -461,6 +462,8 @@ const displayCompanyHols = (date) => {
 extraDatesForm.addEventListener("submit", function (e) {
     e.preventDefault();
     let newDate = new Date(`${extraDates.value}`);
+    newDate.setHours(0);
+    console.log('EXTRA DATE:', newDate)
     nonProcessingDays.push(newDate);
     displayCompanyHols(newDate);
 })

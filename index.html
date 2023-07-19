@@ -48,8 +48,8 @@
                 <label for="year-select">Choose a year:</label>
                 <div class="row mb-3">
                     <div class="col-sm-3">
-                        <select class="form-select" aria-label="year select" name="year" id="year-select">
-                            <option selected>Select a year</option>
+                        <select class="form-select" aria-label="year select" name="year" id="year-select" required>
+                            <option value="" selected>Select a year</option>
                             <option value="2017">2017</option>
                             <option value="2018">2018</option>
                             <option value="2019">2019</option>
@@ -158,7 +158,7 @@
         mocha.checkLeaks();
     </script>
     <script src="test/test.js" type="module"></script>
-    
+
 </body>
 
 </html>
