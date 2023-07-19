@@ -78,6 +78,7 @@ function getBankHols(year) {
                     console.log(newDate);
                 })
                 console.log('NONPROCESSINGDAYS:', nonProcessingDays);
+                removeDeleteBtns();
                 return appOutput;
                 // return processingDaysObj;
             })
@@ -455,7 +456,7 @@ const displayCompanyHols = (date) => {
     // Creates new list items
     const newItem = document.createElement('li');
     const deleteButton = document.createElement('button');
-    deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
+    deleteButton.classList.add('btn', 'btn-sm', 'btn-danger', 'deleteBtn');
     const breakLine = document.createElement('br');
     newItem.innerText = `${convertJSDateToDMY(date)}`;
     newItem.style.display = "inline";
@@ -463,6 +464,14 @@ const displayCompanyHols = (date) => {
     companyDatesDisplay.append(newItem, deleteButton, breakLine);
     console.log(date);
     console.log(nonProcessingDays);
+}
+
+// Remove delete buttons for company holidays after generating dates - UI improvement
+function removeDeleteBtns () {
+    const deleteBtns = document.querySelectorAll('.deleteBtn');
+    deleteBtns.forEach((btn) => {
+        btn.remove();
+    })
 }
 
 // Add extra date items to list on submission
