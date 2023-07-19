@@ -410,7 +410,7 @@ yearSelected.addEventListener('change', function () {
 // Trigger on clicking 'calculate dates' button
 chooseYear.addEventListener('submit', function (e) {
     e.preventDefault();
-    datesCalculatedTooltip();
+    dynamicTooltip(calculateDatesBtn, 'Make sure to add company holiday dates first', 'Dates calculated!');
     getBankHols(yearSelected);
     reveal(results);
     reveal(bankHolsTab);
@@ -472,7 +472,7 @@ extraDatesForm.addEventListener("submit", function (e) {
 
 function addExtraDate(e, date) {
     e.preventDefault();
-    datesAddedTooltip();
+    dynamicTooltip(addCompanyDatesBtn, 'Add date', 'Date added');
     let newDate = new Date(date);
     newDate.setHours(0);
     console.log('EXTRA DATE:', newDate)
@@ -520,31 +520,16 @@ function copyElement(el) {
 // Select all in table and copy
 copyButton.addEventListener('click', function () {
     copyElement(resultsTable);
-    const tooltip = bootstrap.Tooltip.getInstance(copyButton);
-    tooltip.setContent({ '.tooltip-inner': 'Copied!' })
-    setTimeout(() => {
-        tooltip.hide();
-        tooltip.setContent({ '.tooltip-inner': 'Copy to clipboard' })
-    }, 1000)
-    // btn_tooltip.show();
-    // copyButton.setAttribute('data-bs-original-title', 'Copied!');
+    dynamicTooltip(copyButton, 'Copy to clipboard', 'Copied!')
 });
 
-function datesCalculatedTooltip() {
-    const tooltip = bootstrap.Tooltip.getInstance(calculateDatesBtn);
-    tooltip.setContent({ '.tooltip-inner': 'Dates calculated!' })
+// Set up tooltip with updated message on click - pass this into an event listener
+function dynamicTooltip(button, originalMsg, updateMsg) {
+    const tooltip = bootstrap.Tooltip.getInstance(button);
+    tooltip.setContent({ '.tooltip-inner': updateMsg })
     setTimeout(() => {
         tooltip.hide();
-        tooltip.setContent({ '.tooltip-inner': 'Make sure to add company holiday dates first' })
-    }, 1000)
-}
-
-function datesAddedTooltip() {
-    const tooltip = bootstrap.Tooltip.getInstance(addCompanyDatesBtn);
-    tooltip.setContent({ '.tooltip-inner': 'Date added' })
-    setTimeout(() => {
-        tooltip.hide();
-        tooltip.setContent({ '.tooltip-inner': 'Add date' })
+        tooltip.setContent({ '.tooltip-inner': originalMsg })
     }, 1000)
 }
 
