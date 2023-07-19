@@ -15,6 +15,8 @@ const bankHolsTable = document.querySelector('#bankHolsTable');
 const weekendsTable = document.querySelector('#weekendsTable');
 const processingDays = document.querySelector('#processingDays');
 const copyButton = document.querySelector('#copyButton');
+const calculateDatesBtn = document.querySelector('#calculateDates');
+const addCompanyDatesBtn = document.querySelector('#addCompanyDatesBtn');
 const results = document.querySelector('#results');
 let resultsTable;
 let processingDaysObj = {};
@@ -71,6 +73,10 @@ function getBankHols(year) {
                 console.log('daysOfWeek!!', daysOfWeek)
                 console.log('APPOUTPUT:', processingDaysObj);
                 let appOutput = processingDaysObj;
+                nonProcessingDays.forEach((date) => {
+                    const newDate = convertJSDateToDMY(date);
+                    console.log(newDate);
+                })
                 console.log('NONPROCESSINGDAYS:', nonProcessingDays);
                 return appOutput;
                 // return processingDaysObj;
@@ -404,6 +410,7 @@ yearSelected.addEventListener('change', function () {
 // Trigger on clicking 'calculate dates' button
 chooseYear.addEventListener('submit', function (e) {
     e.preventDefault();
+    datesCalculatedTooltip();
     getBankHols(yearSelected);
     reveal(results);
     reveal(bankHolsTab);
@@ -448,11 +455,11 @@ const displayCompanyHols = (date) => {
     // Creates new list items
     const newItem = document.createElement('li');
     const deleteButton = document.createElement('button');
-    deleteButton.classList.add('btn', 'btn-outline-info');
+    deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
     const breakLine = document.createElement('br');
     newItem.innerText = `${convertJSDateToDMY(date)}`;
     newItem.style.display = "inline";
-    deleteButton.innerHTML = '<i class="fa-solid fa-square-minus"></i>';
+    deleteButton.innerHTML = '<i class="fa-solid fa-minus"></i>';
     companyDatesDisplay.append(newItem, deleteButton, breakLine);
     console.log(date);
     console.log(nonProcessingDays);
@@ -460,16 +467,25 @@ const displayCompanyHols = (date) => {
 
 // Add extra date items to list on submission
 extraDatesForm.addEventListener("submit", function (e) {
+    addExtraDate(e, extraDates.value)
+})
+
+function addExtraDate(e, date) {
     e.preventDefault();
-    let newDate = new Date(`${extraDates.value}`);
+    datesAddedTooltip();
+    let newDate = new Date(date);
     newDate.setHours(0);
     console.log('EXTRA DATE:', newDate)
     nonProcessingDays.push(newDate);
     displayCompanyHols(newDate);
-})
+    return newDate;
+}
 
 // Clicking on ' - ' chooseYear to remove list item
-companyDatesDisplay.addEventListener('click', function (e) {
+companyDatesDisplay.addEventListener('click', removeDate);
+
+// Remove extra company dates if clicking on '-'
+function removeDate(e) {
     if (e.target.nodeName === "BUTTON") {
         let dateToDelete = new Date(convertUKDateToObject(e.target.previousElementSibling.innerText));
         dateToDelete.setHours(0);
@@ -482,7 +498,7 @@ companyDatesDisplay.addEventListener('click', function (e) {
         e.target.nextElementSibling.remove();
         e.target.remove();
     }
-})
+}
 
 // Utility function to select any element
 function selectElement(el) {
@@ -514,6 +530,23 @@ copyButton.addEventListener('click', function () {
     // copyButton.setAttribute('data-bs-original-title', 'Copied!');
 });
 
+function datesCalculatedTooltip() {
+    const tooltip = bootstrap.Tooltip.getInstance(calculateDatesBtn);
+    tooltip.setContent({ '.tooltip-inner': 'Dates calculated!' })
+    setTimeout(() => {
+        tooltip.hide();
+        tooltip.setContent({ '.tooltip-inner': 'Make sure to add company holiday dates first' })
+    }, 1000)
+}
+
+function datesAddedTooltip() {
+    const tooltip = bootstrap.Tooltip.getInstance(addCompanyDatesBtn);
+    tooltip.setContent({ '.tooltip-inner': 'Date added' })
+    setTimeout(() => {
+        tooltip.hide();
+        tooltip.setContent({ '.tooltip-inner': 'Add date' })
+    }, 1000)
+}
 
 // Exporting variables and functions
 const variables = {
@@ -542,7 +575,9 @@ const functions = {
     displayCompanyHols,
     forwards,
     backwards,
-    shiftDates
+    shiftDates,
+    addExtraDate,
+    removeDate
 }
 
 export { functions, variables };
