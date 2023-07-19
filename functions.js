@@ -471,6 +471,13 @@ extraDatesForm.addEventListener("submit", function (e) {
 // Clicking on ' - ' chooseYear to remove list item
 companyDatesDisplay.addEventListener('click', function (e) {
     if (e.target.nodeName === "BUTTON") {
+        let dateToDelete = new Date(convertUKDateToObject(e.target.previousElementSibling.innerText));
+        dateToDelete.setHours(0);
+        let index = nonProcessingDays.findIndex(date => date.getTime() === dateToDelete.getTime());
+        if (index !== -1) {
+            nonProcessingDays.splice(index, 1);
+        }
+        console.log('nonProcessingDays:', nonProcessingDays)
         e.target.previousElementSibling.remove();
         e.target.nextElementSibling.remove();
         e.target.remove();
