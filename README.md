@@ -42,17 +42,10 @@
 
 ## How to Use :page_with_curl:
 
-- The app can currently be launched in one of 2 ways:
-### Using Node.js
-  - Use the command `node index.js` in the terminal to start the server
-  - You should see the message 'App listening at http://localhost:3000'
-  - Open a new tab in your browser and navigate to [http://localhost:3000](http://localhost:3000)
-### Using VSCode Live Server extension
-  - From VSCode editor, make sure that you have the ['Live Server'](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension installed
-  - From the project folder, right-click the index.html file, and select 'Open with Live Server.'
 - In the text input box, enter any holidays (i.e. office closure dates) from the current *and* previous year (DD/MM/YYYY format) and click the 'Add' button after each entry. Repeat as necessary. You should now see these displayed underneath the form.
 - Choose a year from the dropdown menu
 - Click 'Give me dates'. You should now see a list of ad hoc holiday dates, bank holiday dates, and weekends, followed by a table displaying your DD calendar dates.
+- For easy export in the correct table layout and format, navigate to the 'Processing Days' tab and then click 'Copy Table.' This will copy the results to your clipboard, to be pasted into Excel or as required.
 
 ## Testing and Debugging :computer:
 
