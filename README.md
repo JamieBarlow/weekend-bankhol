@@ -56,6 +56,8 @@ The app uses a four-phase test pattern (setup, exercise, verify, teardown) to un
 
 ![Mocha test screenshot](https://github.com/JamieBarlow/weekend-bankhol/blob/master/resources/mochatest.PNG)
 
+- Note that the 'E2E' test will only pass if you first run the app by choosing a year and clicking 'Calculate dates.' The app needs to run its calculations, whose output are then tested against a set of mock data (currently available for 2020-23 only, other years will not pass E2E testing regardless). E2E testing also doesn't currently account for extra company holiday dates, so you will need to omit these and select a year only.
+
 ## Development Challenges and Lessons :wrench:
 
 The below challenges have all been accounted for in the design of this app, but they are worthy of consideration to ensure that any future development or changes remain fit for purpose:
