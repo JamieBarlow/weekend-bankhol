@@ -8,6 +8,10 @@
     ],
     "rewrites": [
       {
+        "source": "/node_modules/**",
+        "destination": "/$1"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
