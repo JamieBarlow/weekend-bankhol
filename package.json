@@ -4,7 +4,8 @@
   "description": "Identifying weekends, bank holidays and workplace-specific holidays to arrange Direct Debit processing dates",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "build": "echo 'No build script defined'"
   },
   "author": "Jamie Barlow",
   "license": "ISC",
