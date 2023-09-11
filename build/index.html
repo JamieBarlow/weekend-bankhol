@@ -1,89 +1,185 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.3.1/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.3.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.3.1/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/10.3.1/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/10.3.1/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/10.3.1/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/10.3.1/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/10.3.1/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/10.3.1/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/10.3.1/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap');
     </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+    <link rel="stylesheet" href="styles/bootstrap.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/mocha.css">
+    <script src="https://kit.fontawesome.com/762a7ebf5f.js" crossorigin="anonymous"></script>
+</head>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+<body>
+    <header class="header wrapper p-3 text-center">
+        <h1>Direct Debit Processing Calendar</h1>
+    </header>
+    <main class="main">
+        <section class="extra-dates container border border-1 rounded-5 p-4 mb-4">
+            <form id="extra-dates__form" class="mb-3">
+                <div class="row mb-3">
+                    <div class="col">
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
+                        <label for="company-dates" class="form-label">1. Please enter any extra company holiday dates
+                            (e.g.
+                            Christmas office closure dates) in the field below and click 'Add' to exclude them from the
+                            list of potential working days. Make sure to include holidays for both the
+                            current
+                            year <em>and</em> the previous year. <a href="#" data-bs-custom-class="tooltip--standard"
+                                data-bs-toggle="tooltip"
+                                data-bs-title="Holiday/office closure dates from the previous year may affect calculations for the current year, so it is important to include these as well."
+                                data-bs-placement="right"><i class="fa-solid fa-circle-question"></i></a> <br><br>Please
+                            enter
+                            in DD/MM/YYYY format and
+                            click 'Add' after
+                            each
+                            entry:</label>
+                        <div class="row align-items-center">
+                            <div class="col-3"><input type="date" class="form-control" id="company-dates"
+                                    pattern="([0-9]+(/[0-9]+)+)" required></div>
+                            <div class="col"><button id="addCompanyDatesBtn" type="submit"
+                                    class="btn btn-primary form-button" data-bs-custom-class="tooltip--warning"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-title="Add date"
+                                    data-bs-placement="right" href="#">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <form action="#" method="GET" id="chooseYear">
+                <label for="year-select" class="form-label">2. Choose a year and select 'calculate dates':</label>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <select class="form-select" aria-label="year select" name="year" id="year-select" required>
+                            <option value="" selected>Select a year</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <button id="calculateDates" class="btn btn-primary dates-submit form-button"
+                            data-bs-custom-class="tooltip--warning" data-bs-toggle="tooltip"
+                            data-bs-title="Make sure you have added company dates first" data-bs-placement="right"
+                            href="#">Calculate
+                            dates</button>
+                    </div>
+                </div>
+                </div>
+            </form>
+        </section>
+        <section id="results" class="container">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="company-tab" data-bs-toggle="tab"
+                        data-bs-target="#company-tab-pane" type="button" role="tab" aria-controls="company-tab-pane"
+                        aria-selected="true">Company Dates</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="bankHols-tab" data-bs-toggle="tab" data-bs-target="#bankHols-tab-pane"
+                        type="button" role="tab" aria-controls="bankHols-tab-pane" aria-selected="false">Bank
+                        Holidays</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="weekends-tab" data-bs-toggle="tab" data-bs-target="#weekends-tab-pane"
+                        type="button" role="tab" aria-controls="weekends-tab-pane"
+                        aria-selected="false">Weekends</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="processing-tab" data-bs-toggle="tab"
+                        data-bs-target="#processing-tab-pane" type="button" role="tab"
+                        aria-controls="processing-tab-pane" aria-selected="false">Processing Days</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="company-tab-pane" role="tabpanel"
+                    aria-labelledby="company-tab" tabindex="0">
+                    <section id="company-dates-display" class="container">
+                        <table class="table table-primary table-striped table-hover">
+                        </table>
+                    </section>
+                </div>
+                <div class="tab-pane fade" id="bankHols-tab-pane" role="tabpanel" aria-labelledby="bankHols-tab"
+                    tabindex="0">
+                    <section id="bankHols-display" class="container">
+                        <table id="bankHolsTable" class="table table-primary table-striped table-hover">
+                            <thead>
+                                <tr class="table__header table-dark">
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Day of the week</th>
+                                    <th scope="col">Bank Holiday</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bankHolTable__body">
+
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+                <div class="tab-pane fade" id="weekends-tab-pane" role="tabpanel" aria-labelledby="weekends-tab"
+                    tabindex="0">
+                    <section id="weekends-display" class="container">
+                        <table id="weekendsTable" class="table table-success table-striped table-hover">
+                            <thead>
+                                <tr class="table__header table-dark">
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Day of the week</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weekendsTable__body">
+
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+                <div class="tab-pane fade" id="processing-tab-pane" role="tabpanel" aria-labelledby="processing-tab"
+                    tabindex="0">
+                    <section id="processingDays" class="container">
+                        <div class="d-flex justify-content-end">
+                            <button id="copyButton" class="btn btn-success" href="#" data-bs-toggle="tooltip"
+                                data-bs-title="Copy to clipboard">Copy table<i
+                                    class="fa-regular fa-clipboard ps-2"></i></button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+
+
+        <div id="mocha"></div>
+    </main>
+    <!-- <script src="scripts/require.js"></script> -->
+    <script src="scripts/bootstrap.bundle.min.js"></script>
+    <script src="scripts/functions.js" type="module"></script>
+    <script src="scripts/test/mocha.js"></script>
+    <script src="scripts/test/chai.js"></script>
+    <script class="mocha-init">
+        mocha.setup('bdd');
+        mocha.checkLeaks();
     </script>
-  </body>
+    <script src="scripts/test/test.js" type="module"></script>
+
+</body>
+
 </html>
