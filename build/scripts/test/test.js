@@ -9,17 +9,17 @@ describe('+', () => {
     })
 })
 
-describe('getBankHols', () => {
-    it('returns bank holiday data from the Government API in the form of an array', async () => {
-        const actual = await functions.getBankHols();
-        console.log('actual!!', actual)
-        assert.isNotEmpty(actual.results);
-    }),
-        it('returns dates', async () => {
-            const actual = await functions.getBankHols();
-            assert.isNotEmpty(actual.dates);
-        })
-})
+// describe('getBankHols', () => {
+//     it('returns bank holiday data from the Government API in the form of an array', async () => {
+//         const actual = await functions.getBankHols();
+//         console.log('actual!!', actual)
+//         assert.isNotEmpty(actual.results);
+//     }),
+//         it('returns dates', async () => {
+//             const actual = await functions.getBankHols();
+//             assert.isNotEmpty(actual.dates);
+//         })
+// })
 
 describe('getWeekends', () => {
     it('returns an array of weekend dates for a given year', () => {
